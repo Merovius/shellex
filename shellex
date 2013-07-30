@@ -1,0 +1,4 @@
+#!/bin/sh
+
+export ZDOTDIR="/home/mero/src/shellex"
+urxvt -pe shellex -override-redirect -name shellex
