@@ -29,7 +29,7 @@ Architecture
 
 * [A small shell-script](shellex) that just starts a `urxvt` with some extra
   parameters
-* [An urxvt-extension](urxvt_shellex) that manages the terminal/displaying
+* [An urxvt-extension](urxvt_shellex.pl) that manages the terminal/displaying
   part.
 * [A zsh-config](zshrc) that does all stuff relating to the functional
   behaviour.
@@ -63,7 +63,7 @@ Installation
 
 If you want to try it, you should do the following:
 * Change the path in [the shell-script](shellex)
-* `mkdir ~/.urxvt; ln /path/to/shellex/urxvt_shellex ~/.urxvt/shellex`
+* `mkdir ~/.urxvt; ln /path/to/shellex/urxvt_shellex.pl ~/.urxvt/shellex`
 * `echo "URxvt.perl-lib: $HOME/.urxvt" >> ~/.Xresources`
 * `xrdb -merge ~/.Xresources`
 or something equivalent.
