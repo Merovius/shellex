@@ -46,7 +46,6 @@ Working:
   currently focused window or the output containing the mousepointer)
 
 Planned, but not Implemented yet:
-* Actually not hard-coding widths and stuff (see above)
 * Dynamic resizing of the launcher-window e.g. for multiple lines of
   suggestions for tab-completions
 * Buffering/showing some output, for errors etc. We have to think about some
