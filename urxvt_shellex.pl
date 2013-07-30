@@ -3,7 +3,7 @@ use X11::Protocol;
 
 sub get_outputs {
     my @outputs = ();
-    foreach my $line (qx(xrandr -q)) {
+    for my $line (qx(xrandr -q)) {
         next unless $line =~ /\sconnected/;
         my ($w, $h, $x, $y) = ($line =~ /(\d+)x(\d+)\+(\d+)\+(\d+)/);
         push @outputs, { w => $w, h => $h, x => $x, y => $y };
@@ -21,7 +21,7 @@ sub on_init {
     $self->{x} = 0;
     $self->{y} = 0;
     $self->{w} = 1024;
-    foreach my $output (@outputs) {
+    for my $output (@outputs) {
         if ($output->{x} <= $ptr->{root_x} && $ptr->{root_x} < $output->{x} + $output->{w}) {
             $self->{x} = $output->{x};
             $self->{y} = $output->{y};
