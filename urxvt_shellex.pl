@@ -11,16 +11,14 @@ sub get_outputs {
     return @outputs;
 }
 
-sub on_init {
+sub geometry_from_ptr {
     my ($self) = @_;
+
     my @outputs = get_outputs();
 
     my $X = X11::Protocol->new($self->display_id);
     my $ptr = { $X->QueryPointer($self->DefaultRootWindow) };
 
-    $self->{x} = 0;
-    $self->{y} = 0;
-    $self->{w} = 1024;
     for my $output (@outputs) {
         if ($output->{x} <= $ptr->{root_x} && $ptr->{root_x} < $output->{x} + $output->{w}) {
             $self->{x} = $output->{x};
@@ -28,12 +26,66 @@ sub on_init {
             $self->{w} = $output->{w};
         }
     }
+}
+
+sub geometry_from_focus {
+    my ($self) = @_;
+
+    my @outputs = get_outputs();
+
+    my $X = X11::Protocol->new($self->display_id);
+    my ($focus, $revert) = $X->GetInputFocus();
+
+    my $geom = { $X->GetGeometry($focus) };
+    my ($fw, $fh) = ($geom->{width}, $geom->{height});
+    my (undef, undef, $fx, $fy) = $X->TranslateCoordinates($focus, $self->DefaultRootWindow, 0, 0);
+
+    my $intersection = sub {
+        my ($x, $y, $w, $h) = @_;
+        my $dx = $x + $w - $fx;
+        $dx = $dx > 0 ? $dx : 0;
+        $dx = $dx > $fw ? $fw : $dx;
+
+        my $dy = $y + $h - $fy;
+        $dy = $dy > 0 ? $dy : 0;
+        $dy = $dy > $fh ? $fh : $dy;
+
+        return $dx * $dy;
+    };
+
+    my $max_area = 0;
+    for my $output (@outputs) {
+        my $area = $intersection->($output->{x}, $output->{y}, $output->{w}, $output->{h});
+        if ($area >= $max_area) {
+            $max_area = $area;
+            $self->{x} = $output->{x};
+            $self->{y} = $output->{y};
+            $self->{w} = $output->{w};
+        }
+    }
+}
+
+sub on_init {
+    my ($self) = @_;
+
+    $self->{x} = 0;
+    $self->{y} = 0;
+    $self->{w} = 1024;
 
     ();
 }
 
 sub on_start {
     my ($self) = @_;
+
+    if ($self->x_resource("%.pos") eq 'pointer') {
+        print "Getting shellex-position from pointer\n";
+        $self->geometry_from_ptr();
+    } else {
+        print "Getting shellex-position from focused window\n";
+        $self->geometry_from_focus();
+    }
+
     $self->XMoveResizeWindow($self->parent, $self->{x}, $self->{y}, $self->{w}, 2+$self->fheight);
     ();
 }

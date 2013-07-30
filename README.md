@@ -42,10 +42,10 @@ Working:
 * Launching Applications (yay)
 * Commandline parameters
 * Basic Tab-completion
-
-Planned, but not Implemented yet:
 * Starting on the right output (configurable, either the output containing the
   currently focused window or the output containing the mousepointer)
+
+Planned, but not Implemented yet:
 * Actually not hard-coding widths and stuff (see above)
 * Dynamic resizing of the launcher-window e.g. for multiple lines of
   suggestions for tab-completions
@@ -67,3 +67,18 @@ If you want to try it, you should do the following:
 * `echo "URxvt.perl-lib: $HOME/.urxvt" >> ~/.Xresources`
 * `xrdb -merge ~/.Xresources`
 or something equivalent.
+
+
+Configuration
+=============
+
+There are two locations for `shellex` configuration: The first one is the
+shell-script (following the tradition of window managers like awesome or dwm of
+calling the sourcecode "configfile") for the functional part, the other one are
+X-resources.
+
+The only X-resource yet defined is `URxvt.shellex.pos`, determining what
+criterion `shellex` uses, to position its window. If it is set to `pointer`,
+`shellex` will use the output the mouse-pointer is currently on, if it is set
+to `focus`, it will take the output that contains most of the currently focused
+window (the default).
