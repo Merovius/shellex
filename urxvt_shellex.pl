@@ -91,18 +91,26 @@ sub on_start {
     }
     $ENV{SHELLEX_MAX_HEIGHT} = int($self->{h} / $self->fheight);
 
-    $self->XMoveResizeWindow($self->parent, $self->{x}, $self->{y}, $self->{w}, 2+$self->fheight);
+    $self->XMoveResizeWindow($self->parent, $self->{x}, $self->{y}, $self->{w}, 2 + $self->fheight);
     ();
 }
 
 sub on_line_update {
     my ($self, $row) = @_;
     print "line_update(row = $row)\n";
-
+    my $nrow = 0;
+    for my $i ($self->top_row .. $self->nrow-1) {
+        if ($self->ROW_l($i) > 0) {
+            print "row $i is " . $self->ROW_l($i) . "\n";
+            $nrow++;
+        }
+    }
+    $nrow = $nrow > 0 ? $nrow : 1;
+    print "resizing to $nrow\n";
+    $self->cmd_parse("\e[8;$nrow;t");
     ();
 }
 
-my $grow = 1;
 sub on_add_lines {
     my ($self, $string) = @_;
     my $str = $string;
@@ -111,10 +119,18 @@ sub on_add_lines {
     print "add_lines(string = \"$str\")\n";
 
     my $nl = ($string =~ tr/\n//);
-    if ($nl > 0 && $grow) {
-        $grow = 0;
-        my $nrow = $self->nrow + $nl;
-        $self->cmd_parse("\e[8;${nrow};t");
+    if ($nl > 0) {
+        my $nrow = 0;
+        for my $i ($self->top_row .. $self->nrow-1) {
+            if ($self->ROW_l($i) > 0) {
+                print "row $i is " . $self->ROW_l($i) . "\n";
+                $nrow++;
+            }
+        }
+        $nrow = $nrow > 0 ? $nrow : 1;
+        print "resizing to $nrow + $nl\n";
+        $nrow += $nl;
+        $self->cmd_parse("\e[8;$nrow;t");
     }
     ();
 }
@@ -132,7 +148,7 @@ sub on_view_change {
 }
 
 sub on_scroll_back {
-    my ($term, $lines, $saved) = @_;
+    my ($self, $lines, $saved) = @_;
     print "scroll_back(lines = $lines, saved = $saved)\n";
     ();
 }
