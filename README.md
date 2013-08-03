@@ -62,9 +62,11 @@ Installation
 
 If you want to try it, you should do the following:
 * Change the path in [the shell-script](shellex)
+* `cd /path/to/shellex/preload; make`
 * `mkdir ~/.urxvt; ln /path/to/shellex/urxvt_shellex.pl ~/.urxvt/shellex`
 * `echo "URxvt.perl-lib: $HOME/.urxvt" >> ~/.Xresources`
 * `xrdb -merge ~/.Xresources`
+
 or something equivalent.
 
 
