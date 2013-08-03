@@ -3,4 +3,4 @@
 SHELLEX_BASE="/home/mero/src/shellex"
 export ZDOTDIR="$SHELLEX_BASE"
 export LD_PRELOAD="$SHELLEX_BASE/preload/shellex_preload.so"
-exec urxvt -pe shellex -override-redirect -name shellex -bg white -e env -u LD_PRELOAD zsh
+exec urxvt -pe shellex -override-redirect -name shellex -e env -u LD_PRELOAD zsh
