@@ -1,0 +1,26 @@
+The process of automatically resizing the window to match the shell-output is
+surprisingly complex. Normally the way the shell and terminal orchestrate
+themselves to do the output is the following:
+The terminal gets resized and does a TIOCSWINSZ ioctl on the pty-fd over which
+the two processes communicate, giving the new dimenions. This prompts the
+terminal to send the shell a SIGWINCH. The shell handles this by doing a
+TIOCGWINSZ ioctl on the pty which returns the data the terminal gave.
+
+zsh now uses this to determine, wether or not e.g. a tabcompletion-suggestion
+fits on the terminal and if not, handles it differently. This is a problem for
+shellex, because when is starting it's output, there is not enough space, for
+the tabcompletion, so even if we immediately resize the terminalwindow, it will
+be too late and the shell-output is screwed up.
+
+We rectify this, by injecting a custom ioctl-function into urxvt via
+LD_PRELOAD, which rewrites all TIOCSWINSZ-requests to have a constant size,
+thus faking to the shell that there is more space available, then there
+actually is. The actual number of rows is calculated on start of the urxvt and
+put into an environment-variable.
+
+
+
+With the current state, the window of shellex is able to grow automatically
+exactly one time. This is, because zsh is spamming the output with '\n', if we
+grow it always and we have yet to figure out why and how to stop that.
+Shrinking (i.e. when the tab-completion vanishes again) is not implemented yet.

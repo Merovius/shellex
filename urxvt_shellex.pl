@@ -1,3 +1,4 @@
+#line 3
 use Data::Dumper;
 use X11::Protocol;
 
@@ -24,6 +25,7 @@ sub geometry_from_ptr {
             $self->{x} = $output->{x};
             $self->{y} = $output->{y};
             $self->{w} = $output->{w};
+            $self->{h} = $output->{h};
         }
     }
 }
@@ -61,6 +63,7 @@ sub geometry_from_focus {
             $self->{x} = $output->{x};
             $self->{y} = $output->{y};
             $self->{w} = $output->{w};
+            $self->{h} = $output->{h};
         }
     }
 }
@@ -71,6 +74,7 @@ sub on_init {
     $self->{x} = 0;
     $self->{y} = 0;
     $self->{w} = 1024;
+    $self->{h} = 768;
 
     ();
 }
@@ -85,6 +89,7 @@ sub on_start {
         print "Getting shellex-position from focused window\n";
         $self->geometry_from_focus();
     }
+    $ENV{SHELLEX_MAX_HEIGHT} = int($self->{h} / $self->fheight);
 
     $self->XMoveResizeWindow($self->parent, $self->{x}, $self->{y}, $self->{w}, 2+$self->fheight);
     ();
@@ -92,24 +97,43 @@ sub on_start {
 
 sub on_line_update {
     my ($self, $row) = @_;
+    print "line_update(row = $row)\n";
+
     ();
 }
 
+my $grow = 1;
 sub on_add_lines {
     my ($self, $string) = @_;
-    if ($string =~ /\n/g) {
-        $self->XMoveResizeWindow($self->parent, 0, 0, 1440, $self->height + $self->fheight);
+    my $str = $string;
+    $str =~ s/\n/\\n/g;
+    $str =~ s/\r/\\r/g;
+    print "add_lines(string = \"$str\")\n";
+
+    my $nl = ($string =~ tr/\n//);
+    if ($nl > 0 && $grow) {
+        $grow = 0;
+        my $nrow = $self->nrow + $nl;
+        $self->cmd_parse("\e[8;${nrow};t");
     }
+    ();
+}
+
+sub on_size_change {
+    my ($self, $nw, $nh) = @_;
+    print "size_change($nw, $nh)\n";
     ();
 }
 
 sub on_view_change {
     my ($self, $offset) = @_;
+    print "view_change(offset = $offset)\n";
     ();
 }
 
 sub on_scroll_back {
     my ($term, $lines, $saved) = @_;
+    print "scroll_back(lines = $lines, saved = $saved)\n";
     ();
 }
 

@@ -47,7 +47,7 @@ Working:
 
 Planned, but not Implemented yet:
 * Dynamic resizing of the launcher-window e.g. for multiple lines of
-  suggestions for tab-completions
+  suggestions for tab-completions (see [doc/autoresize.txt](doc/autoresize.txt))
 * Buffering/showing some output, for errors etc. We have to think about some
   magic way to determine, wether output is helpfull or the launcher should be
   hidden immediately
