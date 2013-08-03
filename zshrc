@@ -8,7 +8,12 @@ function accept-line () {
         exit
     fi
 
-    BUFFER="$BUFFER > /dev/null 2>&1 &; disown; exit"
+    file=`tempfile`
+    cat > $file <<SHELLEX_EOF
+rm $file
+$BUFFER
+SHELLEX_EOF
+    BUFFER="zsh $file > /dev/null 2>&1 & disown; exit"
     zle .accept-line
 }
 zle -N accept-line
