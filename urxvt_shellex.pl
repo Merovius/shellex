@@ -133,7 +133,7 @@ sub on_line_update {
     }
     $nrow = $nrow > 0 ? $nrow : 1;
     print "resizing to $nrow\n";
-    $self->cmd_parse("\e[8;$nrow;t");
+    $self->cmd_parse("\e[8;$nrow;t\e[3;$self->{x};$self->{y}t");
     ();
 }
 
@@ -158,7 +158,7 @@ sub on_add_lines {
         $nrow = $nrow > 0 ? $nrow : 1;
         print "resizing to $nrow + $nl\n";
         $nrow += $nl;
-        $self->cmd_parse("\e[8;$nrow;t");
+        $self->cmd_parse("\e[8;$nrow;t\e[3;$self->{x};$self->{y}t");
     }
     ();
 }
