@@ -1,7 +1,9 @@
 #line 3
-use Data::Dumper;
 use X11::Protocol;
 
+# The existing Randr-modules on CPAN seem to work only barely, so instead we
+# just parse the output of xrandr -q. This is an uglyness, that should go away
+# some time in the feature.
 sub get_outputs {
     my @outputs = ();
     for my $line (qx(xrandr -q)) {
@@ -12,13 +14,14 @@ sub get_outputs {
     return @outputs;
 }
 
+# This takes a list of outputs and looks up the one, the mouse pointer
+# currently is on.
 sub geometry_from_ptr {
     my ($self) = @_;
 
     my @outputs = get_outputs();
 
-    my $X = X11::Protocol->new($self->display_id);
-    my $ptr = { $X->QueryPointer($self->DefaultRootWindow) };
+    my $ptr = { $self->{X}->QueryPointer($self->DefaultRootWindow) };
 
     for my $output (@outputs) {
         if ($output->{x} <= $ptr->{root_x} && $ptr->{root_x} < $output->{x} + $output->{w}) {
@@ -30,18 +33,24 @@ sub geometry_from_ptr {
     }
 }
 
+# This takes a list of outputs and looks up the one, that contains most of the
+# window having the input focus currently
 sub geometry_from_focus {
     my ($self) = @_;
 
     my @outputs = get_outputs();
 
-    my $X = X11::Protocol->new($self->display_id);
-    my ($focus, $revert) = $X->GetInputFocus();
-
-    my $geom = { $X->GetGeometry($focus) };
+    # Look up the window that currently has the input focus
+    my ($focus, $revert) = $self->{X}->GetInputFocus();
+    my $geom = { $self->{X}->GetGeometry($focus) };
     my ($fw, $fh) = ($geom->{width}, $geom->{height});
-    my (undef, undef, $fx, $fy) = $X->TranslateCoordinates($focus, $self->DefaultRootWindow, 0, 0);
+    # The (x,y) coordinates we get are relative to the parent not the
+    # root-window. So we just translate the coordinates of the upper-left
+    # corner into the coordinate-system of the root-window
+    my (undef, undef, $fx, $fy) = $self->{X}->TranslateCoordinates($focus, $self->DefaultRootWindow, 0, 0);
 
+    # Returns the area (in pixel²) of the intersection of two rectangles.
+    # To understand how it works, best draw a picture.
     my $intersection = sub {
         my ($x, $y, $w, $h) = @_;
         my $dx = $x + $w - $fx;
@@ -68,9 +77,15 @@ sub geometry_from_focus {
     }
 }
 
+# This hook is run when the extension is first initialized, before any windows
+# are created or mapped. There is not much work we can do here.
 sub on_init {
     my ($self) = @_;
 
+    $self->{X} = X11::Protocol->new($self->display_id);
+
+    # Some reasonably sane values in case all our methods to determine a
+    # geometry fails.
     $self->{x} = 0;
     $self->{y} = 0;
     $self->{w} = 1024;
@@ -79,6 +94,8 @@ sub on_init {
     ();
 }
 
+# This hook is run after the window is created, but before it is mapped, so
+# this is the place to set the geometry to what we want
 sub on_start {
     my ($self) = @_;
 
@@ -89,15 +106,24 @@ sub on_start {
         print "Getting shellex-position from focused window\n";
         $self->geometry_from_focus();
     }
+
+    # This environment variable is used by the LD_PRELOAD ioctl-override to
+    # determine the values to send to the shell
     $ENV{SHELLEX_MAX_HEIGHT} = int($self->{h} / $self->fheight);
 
     $self->XMoveResizeWindow($self->parent, $self->{x}, $self->{y}, $self->{w}, 2 + $self->fheight);
     ();
 }
 
+# This hook is run every time a line was changed. We do some resizing here,
+# because this catches most cases where we would want to shrink our window.
 sub on_line_update {
     my ($self, $row) = @_;
     print "line_update(row = $row)\n";
+
+    # Determine the last row, that is not empty.
+    # TODO: Does this work as intended, if there is an empty line in the
+    # middle?
     my $nrow = 0;
     for my $i ($self->top_row .. $self->nrow-1) {
         if ($self->ROW_l($i) > 0) {
@@ -111,6 +137,8 @@ sub on_line_update {
     ();
 }
 
+# This hook is run every time before there is text output. We resize here,
+# immediately before new lines would be added, which would create scrolling
 sub on_add_lines {
     my ($self, $string) = @_;
     my $str = $string;
@@ -135,6 +163,7 @@ sub on_add_lines {
     ();
 }
 
+# Just for debugging
 sub on_size_change {
     my ($self, $nw, $nh) = @_;
     print "size_change($nw, $nh)\n";
@@ -153,6 +182,8 @@ sub on_scroll_back {
     ();
 }
 
+# This hook is run directly after the window was mapped (= displayed on
+# screen). We grab the keyboard here.
 sub on_map_notify {
     my ($self, $ev) = @_;
     $self->grab($self->{data}{event}{time}, 1);
