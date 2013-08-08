@@ -78,8 +78,7 @@ shell-script (following the tradition of window managers like awesome or dwm of
 calling the sourcecode "configfile") for the functional part, the other one are
 X-resources.
 
-The only X-resource yet defined is `URxvt.shellex.pos`, determining what
-criterion `shellex` uses, to position its window. If it is set to `pointer`,
-`shellex` will use the output the mouse-pointer is currently on, if it is set
-to `focus`, it will take the output that contains most of the currently focused
-window (the default).
+Resource           | Values         | Default | Description
+ ----------------- | -------------- | ------- | ---
+URxvt.shellex.pos  | pointer｜focus | focus   | If pointer, shellex shows the window on the window, the mousepointer is on, else it uses the output, where most of the currently focused window is.
+URxvt.shellex.edge | bottom｜top    | top     | On what screenedge to show shellex

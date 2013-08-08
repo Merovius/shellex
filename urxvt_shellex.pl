@@ -26,6 +26,12 @@ sub geometry_from_ptr {
     for my $output (@outputs) {
         if ($output->{x} <= $ptr->{root_x} && $ptr->{root_x} < $output->{x} + $output->{w}) {
             $self->{x} = $output->{x};
+            if ($self->{bottom}) {
+                # The real y-coordinate will change during execution, when the window grows
+                $self->{y} = $output->{y} + $output->{h};
+            } else {
+                $self->{y} = $output->{y};
+            }
             $self->{y} = $output->{y};
             $self->{w} = $output->{w};
             $self->{h} = $output->{h};
@@ -70,7 +76,12 @@ sub geometry_from_focus {
         if ($area >= $max_area) {
             $max_area = $area;
             $self->{x} = $output->{x};
-            $self->{y} = $output->{y};
+            if ($self->{bottom}) {
+                # The real y-coordinate will change during execution, when the window grows
+                $self->{y} = $output->{y} + $output->{h};
+            } else {
+                $self->{y} = $output->{y};
+            }
             $self->{w} = $output->{w};
             $self->{h} = $output->{h};
         }
@@ -99,6 +110,14 @@ sub on_init {
 sub on_start {
     my ($self) = @_;
 
+    if ($self->x_resource("%.edge") eq 'bottom') {
+        print "position should be at the bottom";
+        $self->{bottom} = 1;
+        $self->{y} = $self->{h};
+    } else {
+        print "position should be at the top";
+    }
+
     if ($self->x_resource("%.pos") eq 'pointer') {
         print "Getting shellex-position from pointer\n";
         $self->geometry_from_ptr();
@@ -111,7 +130,12 @@ sub on_start {
     # determine the values to send to the shell
     $ENV{SHELLEX_MAX_HEIGHT} = int($self->{h} / $self->fheight);
 
-    $self->XMoveResizeWindow($self->parent, $self->{x}, $self->{y}, $self->{w}, 2 + $self->fheight);
+    # Our initial position is different, if we have to be at the bottom
+    if ($self->{bottom}) {
+        $self->XMoveResizeWindow($self->parent, $self->{x}, $self->{y} - (2 + $self->fheight), $self->{w}, 2+$self->fheight);
+    } else {
+        $self->XMoveResizeWindow($self->parent, $self->{x}, $self->{y}, $self->{w}, 2+$self->fheight);
+    }
     ();
 }
 
@@ -133,7 +157,14 @@ sub on_line_update {
     }
     $nrow = $nrow > 0 ? $nrow : 1;
     print "resizing to $nrow\n";
-    $self->cmd_parse("\e[8;$nrow;t\e[3;$self->{x};$self->{y}t");
+
+    # If the window is supposed to be at the bottom, we have to move the
+    # window up a little bit
+    my $y = $self->{y};
+    if ($self->{bottom}) {
+        $y -= 2+$nrow*$self->fheight;
+    }
+    $self->cmd_parse("\e[8;$nrow;t\e[3;$self->{x};${y}t");
     ();
 }
 
@@ -158,7 +189,14 @@ sub on_add_lines {
         $nrow = $nrow > 0 ? $nrow : 1;
         print "resizing to $nrow + $nl\n";
         $nrow += $nl;
-        $self->cmd_parse("\e[8;$nrow;t\e[3;$self->{x};$self->{y}t");
+
+        # If the window is supposed to be at the bottom, we have to move the
+        # window up a little bit
+        my $y = $self->{y};
+        if ($self->{bottom}) {
+            $y -= 2+$nrow*$self->fheight;
+        }
+        $self->cmd_parse("\e[8;$nrow;t\e[3;$self->{x};${y}t");
     }
     ();
 }
