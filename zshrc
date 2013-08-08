@@ -18,3 +18,6 @@ SHELLEX_EOF
 }
 zle -N accept-line
 unset ZDOTDIR
+
+# ^C should per default exit
+trap exit SIGINT
