@@ -111,11 +111,11 @@ sub on_start {
     my ($self) = @_;
 
     if ($self->x_resource("%.edge") eq 'bottom') {
-        print "position should be at the bottom";
+        print "position should be at the bottom\n";
         $self->{bottom} = 1;
         $self->{y} = $self->{h};
     } else {
-        print "position should be at the top";
+        print "position should be at the top\n";
     }
 
     if ($self->x_resource("%.pos") eq 'pointer') {
