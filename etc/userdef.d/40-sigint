@@ -1,0 +1,4 @@
+# vim:ft=zsh
+
+# Make zsh exit on ^C
+trap exit SIGINT

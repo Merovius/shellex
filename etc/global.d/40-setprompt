@@ -1,0 +1,4 @@
+# vim:ft=zsh
+
+# Set the prompt
+PROMPT="shellex> "

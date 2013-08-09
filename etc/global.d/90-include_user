@@ -1,0 +1,9 @@
+# vim:ft=zsh
+
+# Loads config in users home. If it does not exist, copy defaults
+
+# If no userconfig exists, copy defaults
+[ -e "$HOME/.shellex" ] || cp -r /etc/shellex/userdef.d "$HOME/.shellex"
+
+# Source every file in ~/.shellex
+foreach file ("$HOME"/.shellex/*) . "$file"; end

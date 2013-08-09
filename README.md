@@ -66,6 +66,7 @@ If you want to try it, you should do the following:
 * `mkdir ~/.urxvt; ln /path/to/shellex/urxvt_shellex.pl ~/.urxvt/shellex`
 * `echo "URxvt.perl-lib: $HOME/.urxvt" >> ~/.Xresources`
 * `xrdb -merge ~/.Xresources`
+* `cp -r /path/to/shellex/etc /etc/shellex`
 
 or something equivalent.
 
@@ -76,9 +77,20 @@ Configuration
 There are two locations for `shellex` configuration: The first one is the
 shell-script (following the tradition of window managers like awesome or dwm of
 calling the sourcecode "configfile") for the functional part, the other one are
-X-resources.
+X-resources (the latter we will try to eliminate in the future).
 
 Resource           | Values         | Default | Description
  ----------------- | -------------- | ------- | ---
 URxvt.shellex.pos  | pointer｜focus | focus   | If pointer, shellex shows the window on the window, the mousepointer is on, else it uses the output, where most of the currently focused window is.
 URxvt.shellex.edge | bottom｜top    | top     | On what screenedge to show shellex
+
+For shell-config there are two locations:
+* `/etc/shellex/global.d` for systemwide configuration-snippets
+* `~/.shellex` for user-specific configuration-snippets (copied from
+  `/etc/shellex/userdef.d` on first start)
+
+You should copy (or link, for development purposes) the etc-directory of the
+source to /etc/shellex. This will give you some reasonable defaults for all
+global users (such as the typical launching-behaviour) and powerfull
+user-defaults on your system (which the user can then opt-out by deleting them
+from her created config).
