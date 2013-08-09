@@ -136,6 +136,8 @@ sub on_start {
     } else {
         $self->XMoveResizeWindow($self->parent, $self->{x}, $self->{y}, $self->{w}, 2+$self->fheight);
     }
+
+    $self->tt_write($self->locale_encode(". /etc/shellexrc\n"));
     ();
 }
 
