@@ -1,10 +1,9 @@
 # vim:ft=zsh
 
 # Make zsh exit on escape
-# TODO: there has to be an easier way then this…
-function __shellex_exit {
+function _shellex_exit {
     exit
 }
-zle -N _shellex_exit __shellex_exit
+zle -N _shellex_exit
 bindkey '^[' _shellex_exit
 
