@@ -8,11 +8,13 @@ function accept-line () {
         exit
     fi
 
+    # We need to write the buffer to a temporary file to accomodate multiple
+    # commands (see https://github.com/Merovius/shellex/issues/11). We let the
+    # shell immediately remove the tempfile, so it's rather short-lived.
     file=`tempfile`
-    cat > $file <<SHELLEX_EOF
-rm $file
-$BUFFER
-SHELLEX_EOF
+    echo "rm $file\n$BUFFER" > $file
+
+    # Execute the tempfile, then exit
     BUFFER="zsh $file > /dev/null 2>&1 & disown; exit"
     zle .accept-line
 }
