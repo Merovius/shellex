@@ -27,9 +27,9 @@ Architecture
 
 `shellex` has three parts:
 
-* [A small shell-script](shellex) that just starts a `urxvt` with some extra
+* [A small shell-script](shellex.in) that just starts a `urxvt` with some extra
   parameters
-* [An urxvt-extension](urxvt_shellex.pl) that manages the terminal/displaying
+* [An urxvt-extension](urxvt/shellex.in) that manages the terminal/displaying
   part.
 * [configfile](conf) that do all stuff relating to the functional behaviour
 
