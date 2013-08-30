@@ -1,5 +1,0 @@
-#!/bin/sh
-
-SHELLEX_BASE="/home/mero/src/shellex"
-export LD_PRELOAD="$SHELLEX_BASE/preload/shellex_preload.so"
-exec urxvt -pe shellex -override-redirect -name shellex -e env -u LD_PRELOAD zsh -f

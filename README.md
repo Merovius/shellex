@@ -31,9 +31,7 @@ Architecture
   parameters
 * [An urxvt-extension](urxvt_shellex.pl) that manages the terminal/displaying
   part.
-* [A zsh-config](zshrc) that does all stuff relating to the functional
-  behaviour.
-
+* [configfile](conf) that do all stuff relating to the functional behaviour
 
 (Planned) Features
 ==================
@@ -60,37 +58,32 @@ Planned, but not Implemented yet:
 Installation
 ============
 
-If you want to try it, you should do the following:
-* Change the path in [the shell-script](shellex)
-* `cd /path/to/shellex/preload; make`
-* `mkdir ~/.urxvt; ln /path/to/shellex/urxvt_shellex.pl ~/.urxvt/shellex`
-* `echo "URxvt.perl-lib: $HOME/.urxvt" >> ~/.Xresources`
-* `xrdb -merge ~/.Xresources`
-* `cp -r /path/to/shellex/etc /etc/shellex`
+Just do
 
-or something equivalent.
-
+  $ make
+  $ make install
 
 Configuration
 =============
 
-There are two locations for `shellex` configuration: The first one is the
-shell-script (following the tradition of window managers like awesome or dwm of
-calling the sourcecode "configfile") for the functional part, the other one are
-X-resources (the latter we will try to eliminate in the future).
+Configuration of `shellex` has two parts: The first one are X-resources (which we will try to eliminate in the future):
 
 Resource           | Values         | Default | Description
  ----------------- | -------------- | ------- | ---
 URxvt.shellex.pos  | pointer｜focus | focus   | If pointer, shellex shows the window on the window, the mousepointer is on, else it uses the output, where most of the currently focused window is.
 URxvt.shellex.edge | bottom｜top    | top     | On what screenedge to show shellex
 
-For shell-config there are two locations:
-* `/etc/shellex/global.d` for systemwide configuration-snippets
-* `~/.shellex` for user-specific configuration-snippets (copied from
-  `/etc/shellex/userdef.d` on first start)
+The other are small shell-script-snippets. When starting, `shellex` will look
+into `$HOME/.shellex` and into `/etc/shellex`. It will then source all the
+snippets in either location. If there is an identically named file in both
+directories, the one in your home will be preferred.
 
-You should copy (or link, for development purposes) the etc-directory of the
-source to /etc/shellex. This will give you some reasonable defaults for all
-global users (such as the typical launching-behaviour) and powerfull
-user-defaults on your system (which the user can then opt-out by deleting them
-from her created config).
+This makes for a pretty flexible configuration process: Usually there will be a
+lot of snippets in `/usr/lib/shellex/conf`, which should be self-contained and
+without a lot of side-effects. In `/etc/shellex` there then are some symlinks
+to those snippets, making up the default-configuration on this system, together
+with administrator-provided additional defaults. Whenever you don't want a
+snippet form `/etc/shellex` to be used, just create a symlink of the same name
+to `/dev/null` in `$HOME/.shellex`. If you want to create your own snippets,
+just put them in `$HOME/.shellex` under a name not used yet and it will be
+automatically sourced.
