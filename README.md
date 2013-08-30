@@ -60,8 +60,10 @@ Installation
 
 Just do
 
-  $ make
-  $ make install
+```sh
+$ make
+$ make install
+```
 
 Configuration
 =============
