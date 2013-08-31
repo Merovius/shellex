@@ -1,3 +1,4 @@
+# vim:ft=perl
 #line 3
 use X11::Protocol;
 use File::Temp qw|tempfile|;
@@ -105,7 +106,7 @@ sub gen_conf {
     map { $fileset{basename($_)} = 1 } <@DESTDIR@@SYSCONFDIR@/shellex/*>;
     map { $fileset{basename($_)} = 1 } <$ENV{HOME}/.shellex/*>;
 
-    my @files = keys %fileset;
+    my @files = sort keys %fileset;
 
     for my $f (@files) {
         if (-e "$ENV->{HOME}/.shellex/$f") {
