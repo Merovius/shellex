@@ -3,6 +3,7 @@
 use X11::Protocol;
 use File::Temp qw|tempfile|;
 use File::Basename qw|basename|;
+use strict;
 
 # The existing Randr-modules on CPAN seem to work only barely, so instead we
 # just parse the output of xrandr -q. This is an uglyness, that should go away
@@ -256,12 +257,26 @@ sub on_scroll_back {
     ();
 }
 
+sub on_x_event {
+    my ($self, $event) = @_;
+
+    if ($event->{type} == urxvt::EnterNotify) {
+        $self->{X}->SetInputFocus($self->parent, 2, $self->{data}{event}{time});
+        $self->{X}->GetInputFocus();
+    }
+
+    ();
+}
+
 # This hook is run directly after the window was mapped (= displayed on
 # screen). We grab the keyboard here.
 sub on_map_notify {
     my ($self, $ev) = @_;
-    $self->grab($self->{data}{event}{time}, 1);
-    $self->allow_events_async;
-    $self->focus_in;
+
+    $self->{X}->SetInputFocus($self->parent, 2, $self->{data}{event}{time});
+    # We use GetInputFocus as a syncing-mechanism
+    $self->{X}->GetInputFocus();
+
+    $self->vt_emask_add(urxvt::EnterWindowMask);
     ();
 }
