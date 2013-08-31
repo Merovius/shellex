@@ -103,7 +103,7 @@ sub gen_conf {
     print $cfg "rm $cfgname\n";
 
     my %fileset = ();
-    map { $fileset{basename($_)} = 1 } <@DESTDIR@@SYSCONFDIR@/shellex/*>;
+    map { $fileset{basename($_)} = 1 } <@SYSCONFDIR@/shellex/*>;
     map { $fileset{basename($_)} = 1 } <$ENV{HOME}/.shellex/*>;
 
     my @files = sort keys %fileset;
@@ -112,7 +112,7 @@ sub gen_conf {
         if (-e "$ENV->{HOME}/.shellex/$f") {
             print $cfg slurp("$ENV{HOME}/.shellex/$f");
         } else {
-            print $cfg slurp("@DESTDIR@@SYSCONFDIR@/shellex/$f");
+            print $cfg slurp("@SYSCONFDIR@/shellex/$f");
         }
     }
     close($cfg);
