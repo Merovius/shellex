@@ -1,0 +1,58 @@
+shellex(1)
+==========
+Axel Wagner <mail@merovius.de>
+v0.0, August 2013
+
+== NAME
+
+shellex - shell-based launcher
+
+== SYNOPSIS
+
+*shellex*
+
+== DESCRIPTION
+
+*shellex* is a shell-based launcher with a lot more features and a lot simpler
+design. It launches a shell (currently zsh(1)) and shows it in a small
+terminal (currently urxvt(1)), wrapping every command with a little bit of
+extra magic (redirecting stdout, stderr, disowning and closing the shell) to
+get more typical launcher-behaviour.
+
+This gives you a simple launcher with tab-completion and other shell-features,
+configurable in shell.
+
+== RESOURCES
+
+*shellex* uses two X-Resources at the monent, to manipulate its behaviour:
+
+URxvt.shellex.pos::
+If pointer, shellex shows the window on the window, the mousepointer is on. If
+focus, it uses the output, where most of the currently focused window is.
+Defaults to focus.
+
+URxvt.shellex.edge::
+On what screen edge to show the launcher (top or bottom). Defaults to top.
+
+== CONFIGURATION
+
+*shellex* configuration snippets can be found in *@PREFIX@@LIBDIR@/shellex/*.
+
+On start, *shellex* looks into @SYSCONFDIR@/shellex for default-snippets to
+source (usually this will be symlinks to *@PREFIX@@LIBDIR@/shellex/*) as well
+as into *$HOME/.shellex/* for any user-configuration. If a file of the same
+name exists in both locations, it will only use the one in *$HOME/.shellex/*.
+
+To customize shellex, you can do the following things in *$HOME/.shellex/*:
+
+1. Overwrite a default by creating a new snippet of the same name
+2. Not include a default by creating a symlink to */dev/null* of the same same
+3. Include an example-snippet not used by default, by creating a symlink to *@PREFIX@@LIBDIR@/shellex/snippet*
+4. Write you own snippets with a currently unused name
+
+To avoid naming-conflicts in the future, you should add a common suffix to all
+your own snippets.
+
+== AUTHORS
+
+Axel Wagner <mail@merovius.de> and contributors
