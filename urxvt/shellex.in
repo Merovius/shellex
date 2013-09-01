@@ -110,7 +110,7 @@ sub gen_conf {
     my @files = sort keys %fileset;
 
     for my $f (@files) {
-        if (-e "$ENV->{HOME}/.shellex/$f") {
+        if (-e "$ENV{HOME}/.shellex/$f") {
             print $cfg slurp("$ENV{HOME}/.shellex/$f");
         } else {
             print $cfg slurp("@SYSCONFDIR@/shellex/$f");
@@ -188,7 +188,6 @@ sub on_line_update {
     my $nrow = 0;
     for my $i ($self->top_row .. $self->nrow-1) {
         if ($self->ROW_l($i) > 0) {
-            print "row $i is " . $self->ROW_l($i) . "\n";
             $nrow++;
         }
     }
