@@ -103,7 +103,7 @@ sub gen_conf {
 
     print $cfg "rm $cfgname\n";
 
-    my %fileset = ();
+    my %fileset;
     map { $fileset{basename($_)} = 1 } <@SYSCONFDIR@/shellex/*>;
     map { $fileset{basename($_)} = 1 } <$ENV{HOME}/.shellex/*>;
 
