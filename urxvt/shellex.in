@@ -44,6 +44,22 @@ sub geometry_from_ptr {
     }
 }
 
+# Helper, that take a list of numbers and return the max resp. min
+sub max {
+    my $max = shift;
+    while (my $n = shift) {
+        $max = $n > $max ? $n : $max;
+    }
+    return $max;
+}
+sub min {
+    my $min = shift;
+    while (my $n = shift) {
+        $min = $n < $min ? $n : $min;
+    }
+    return $min;
+}
+
 # This takes a list of outputs and looks up the one, that contains most of the
 # window having the input focus currently
 sub geometry_from_focus {
@@ -64,13 +80,21 @@ sub geometry_from_focus {
     # To understand how it works, best draw a picture.
     my $intersection = sub {
         my ($x, $y, $w, $h) = @_;
-        my $dx = $x + $w - $fx;
-        $dx = $dx > 0 ? $dx : 0;
-        $dx = $dx > $fw ? $fw : $dx;
+        my $dx;
+        if ($x < $fx) {
+            $dx = $x + $w - $fx;
+        } else {
+            $dx = $fx + $fw - $x;
+        }
+        $dx = max(0, min($dx, $fw, $w));
 
-        my $dy = $y + $h - $fy;
-        $dy = $dy > 0 ? $dy : 0;
-        $dy = $dy > $fh ? $fh : $dy;
+        my $dy;
+        if ($y < $fy) {
+            $dy = $y + $h - $fy;
+        } else {
+            $dy = $fy + $fh - $y;
+        }
+        $dy = max(0, min($dy, $fh, $h));
 
         return $dx * $dy;
     };
