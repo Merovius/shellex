@@ -68,7 +68,8 @@ $ make install
 Configuration
 =============
 
-Configuration of `shellex` has two parts: The first one are X-resources (which we will try to eliminate in the future):
+Configuration of `shellex` has two parts: The first one are X-resources (which
+we will try to eliminate in the future):
 
 Resource           | Values         | Default | Description
  ----------------- | -------------- | ------- | ---
@@ -89,3 +90,16 @@ snippet form `/etc/shellex` to be used, just create a symlink of the same name
 to `/dev/null` in `$HOME/.shellex`. If you want to create your own snippets,
 just put them in `$HOME/.shellex` under a name not used yet and it will be
 automatically sourced.
+
+
+Changing Appearence
+===================
+
+All command-line parameters given to `shellex` are passed directly to `urxvt`,
+so if you want to change colors or font, you can do it through the appropriate
+`urxvt`-parameters. For example, to get a dark grey background with a slightly
+yellow font you might start shellex with
+
+```sh
+$ shellex -bg grey15 -fg linen
+```
