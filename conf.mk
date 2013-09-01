@@ -11,5 +11,5 @@ install-conf:
 	$(INSTALL) -d -m 0755 $(DESTDIR)$(SYSCONFDIR)/shellex
 	for link in $(default_confs); \
 	do \
-		[ -e $(DESTDIR)$(SYSCONFDIR)/shellex ] || ln -s $(PREFIX)$(LIBDIR)/shellex/conf/$${link} $(DESTDIR)$(SYSCONFDIR)/shellex; \
+		[ -e $(DESTDIR)$(SYSCONFDIR)/shellex/$${link} ] || ln -s $(PREFIX)$(LIBDIR)/shellex/conf/$${link} $(DESTDIR)$(SYSCONFDIR)/shellex; \
 	done
