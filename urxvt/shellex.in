@@ -3,6 +3,7 @@
 use X11::Protocol;
 use File::Temp qw|tempfile|;
 use File::Basename qw|basename|;
+use POSIX qw|ceil|;
 use strict;
 
 # The existing Randr-modules on CPAN seem to work only barely, so instead we
@@ -204,6 +205,56 @@ sub on_line_update {
     ();
 }
 
+# Predict the number of rows the terminal will have, after adding $string at
+# the current position
+sub predict_term_size {
+    my ($self, $string) = @_;
+
+    my ($row, $col) = $self->screen_cur();
+    my $i = $self->top_row;
+    my $n = 0;
+
+    # We iterate over all lines and accumulate the number of rows. If the
+    # curser is not at the current line, we can just add its number of rows to
+    # the total, else we test, if it grows when adding the string and add an
+    # according number to the total
+    while ($i < $self->nrow) {
+        my $line = $self->line($i);
+        $i += $line->end - $line->beg + 1;
+        unless ($line->beg <= $row && $row <= $line->end) {
+            $n += $line->end - $line->beg + 1;
+            next
+        }
+
+        my $len = ($row - $line->beg) * $self->ncol + $col;
+
+        # Because there might be control-sequences in $string, affecting the
+        # number of lines, we need to manually walk it
+        for (my $j = 0; $j < length($string); $j++) {
+            # Linebreaks mean the creating of a new line, finishing the old one
+            if (substr($string, $j, 1) eq "\n") {
+                $len = ($len == 0 ? 1 : $len);
+                $n += ceil(($len * 1.0) / $self->ncol);
+                $len = 0;
+                next;
+            }
+            # Carriage-returns mean starting from the beginning. Though the new
+            # len does not really have to be 0 (because the text is not
+            # actually erased) it is a good enough estimate for now
+            if (substr($string, $j, 1) eq "\r") {
+                $len = 0;
+                next;
+            }
+            # We just add one per other char. This actually might not work
+            # correctly with wide-chars, but it is a good enough estimate for
+            # now
+            $len++;
+        }
+        $n += ceil(($len + 1.0) / $self->ncol);
+    }
+    return $n;
+}
+
 # This hook is run every time before there is text output. We resize here,
 # immediately before new lines would be added, which would create scrolling
 sub on_add_lines {
@@ -213,27 +264,16 @@ sub on_add_lines {
     $str =~ s/\r/\\r/g;
     print "add_lines(string = \"$str\")\n";
 
-    my $nl = ($string =~ tr/\n//);
-    if ($nl > 0) {
-        my $nrow = 0;
-        for my $i ($self->top_row .. $self->nrow-1) {
-            if ($self->ROW_l($i) > 0) {
-                print "row $i is " . $self->ROW_l($i) . "\n";
-                $nrow++;
-            }
-        }
-        $nrow = $nrow > 0 ? $nrow : 1;
-        print "resizing to $nrow + $nl\n";
-        $nrow += $nl;
+    my $nrow = $self->predict_term_size($string);
+    print "resizing to $nrow\n";
 
-        # If the window is supposed to be at the bottom, we have to move the
-        # window up a little bit
-        my $y = $self->{y};
-        if ($self->{bottom}) {
-            $y -= 2+$nrow*$self->fheight;
-        }
-        $self->cmd_parse("\e[8;$nrow;t\e[3;$self->{x};${y}t");
+    # If the window is supposed to be at the bottom, we have to move the
+    # window up a little bit
+    my $y = $self->{y};
+    if ($self->{bottom}) {
+        $y -= 2+$nrow*$self->fheight;
     }
+    $self->cmd_parse("\e[8;$nrow;t\e[3;$self->{x};${y}t");
     ();
 }
 
