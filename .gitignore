@@ -1,3 +1,5 @@
 preload/shellex_preload.so
 shellex
 urxvt/shellex
+doc/man/shellex.1
+doc/man/shellex.man
