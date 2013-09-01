@@ -73,7 +73,7 @@ we will try to eliminate in the future):
 
 Resource           | Values         | Default | Description
  ----------------- | -------------- | ------- | ---
-URxvt.shellex.pos  | pointer｜focus | focus   | If pointer, shellex shows the window on the window, the mousepointer is on, else it uses the output, where most of the currently focused window is.
+URxvt.shellex.pos  | pointer｜focus | focus   | If pointer, shellex shows the window on the window, the mousepointer is on, else it uses the output, where most of the currently focused window is (falling back to the pointer-method, if the root-window is focused).
 URxvt.shellex.edge | bottom｜top    | top     | On what screenedge to show shellex
 
 The other are small shell-script-snippets. When starting, `shellex` will look

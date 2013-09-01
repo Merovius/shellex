@@ -69,8 +69,17 @@ sub geometry_from_focus {
 
     # Look up the window that currently has the input focus
     my ($focus, $revert) = $self->{X}->GetInputFocus();
+
+    # If the root-window is focused, we fall back to using the pointer-position
+    if ($focus == $self->DefaultRootWindow) {
+        return $self->geometry_from_ptr();
+    }
+
     my $geom = { $self->{X}->GetGeometry($focus) };
     my ($fw, $fh) = ($geom->{width}, $geom->{height});
+
+    print "Focus $focus (${fw}x${fh})\n";
+
     # The (x,y) coordinates we get are relative to the parent not the
     # root-window. So we just translate the coordinates of the upper-left
     # corner into the coordinate-system of the root-window
