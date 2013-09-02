@@ -58,9 +58,16 @@ Planned, but not Implemented yet:
 Installation
 ============
 
-Just do
+There are packages in [debian](http://packages.debian.org/search?keywords=shellex&searchon=names&suite=all&section=all&sourceid=mozilla-search)
+and in the [Arch User Repository](https://aur.archlinux.org/packages/shellex/).
+If you are on one of these distributions, we encourage you to install `shellex`
+via your package manager.
+
+Else, or if you want to help developing, just do
 
 ```sh
+$ git checkout git://github.com/Merovius/shellex.git
+$ cd shellex
 $ make
 $ make install
 ```
