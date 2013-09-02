@@ -58,8 +58,11 @@ Planned, but not Implemented yet:
 Installation
 ============
 
-There are packages in [debian](http://packages.debian.org/search?keywords=shellex&searchon=names&suite=all&section=all&sourceid=mozilla-search)
-and in the [Arch User Repository](https://aur.archlinux.org/packages/shellex/).
+There are packages in
+
+* [debian](http://packages.debian.org/search?keywords=shellex&searchon=names&suite=all&section=all&sourceid=mozilla-search)
+* The [Arch User Repository](https://aur.archlinux.org/packages/shellex/)
+
 If you are on one of these distributions, we encourage you to install `shellex`
 via your package manager.
 
@@ -71,6 +74,32 @@ $ cd shellex
 $ make
 $ make install
 ```
+
+
+Contributing
+============
+
+`shellex` is a very young project, it would highly profit from your help. The
+following is a not comprehensive list of highly appreciated ways to contribute:
+
+1. Test it and make [tickets](https://github.com/Merovius/shellex/issues) for
+   *any* problems you stumble upon or ideas you have to make it better.
+2. Have a look at a [list of issues](https://github.com/Merovius/shellex/issues)
+   and find one to fix. But please announce your intention to fix it, so that
+   we can be sure that it will be merged and there is no duplication of effort.
+3. Have a look at the [list of packaged dirstributions](https://github.com/Merovius/shellex#installation).
+   If your favourite distribution is not on it, please package it. Please
+   announce your intent to do so (in a ticket) and treat it as at least a
+   mid-term commitment to maintain the package.
+4. Customize `shellex` in self-contained, side-effect free config-snippets and
+   add them - if you consider them useful to more then just yourself - in a
+   pull-request to the conf-dir.
+5. Contribute comments and documentation. Consider translating the manpage.
+   Again, please announce your intention and again, if you translate to a
+   language, that none of the core-developers speak (currently everything but
+   english and german) please consider it to be at least a mid-term commitment
+   to maintain the translation.
+
 
 Configuration
 =============
