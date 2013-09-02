@@ -11,7 +11,7 @@ function accept-line () {
     # We need to write the buffer to a temporary file to accomodate multiple
     # commands (see https://github.com/Merovius/shellex/issues/11). We let the
     # shell immediately remove the tempfile, so it's rather short-lived.
-    file=`tempfile`
+    file=`mktemp -t shellex_exec-XXXXXXXX`
     echo "rm $file\n$BUFFER" > $file
 
     # Execute the tempfile, then exit
