@@ -37,7 +37,6 @@ sub geometry_from_ptr {
             } else {
                 $self->{y} = $output->{y};
             }
-            $self->{y} = $output->{y};
             $self->{w} = $output->{w};
             $self->{h} = $output->{h};
         }
