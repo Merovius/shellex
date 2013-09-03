@@ -1,14 +1,18 @@
 # vim:ft=zsh
-
 # Make zsh automatically execute a command, when enter is hit
+
 zmodload zsh/regex
-function accept-line () {
-    if [ "$BUFFER" -regex-match '^\s*$' ]
+function shellex_preexec () {
+    # In $1 the command-line is given
+    # In $3 the command-line with expanded aliases and function-bodies is given
+
+    # Don't do anything, if an empty command is given
+    if [ "$1" -regex-match '^\s*$' ]
     then
-        exit
+        return 0
     fi
 
-    # We need to write the buffer to a temporary file to accomodate multiple
+    # We need to write the command to a temporary file to accomodate multiple
     # commands (see https://github.com/Merovius/shellex/issues/11). We let the
     # shell immediately remove the tempfile, so it's rather short-lived.
     file=`mktemp -t shellex_exec-XXXXXXXX`
@@ -17,15 +21,23 @@ function accept-line () {
     # this is indeed more hack, the child zsh which executes $file should do this
     if [ -n "$HISTFILE" ]
     then
-       echo $BUFFER >> $HISTFILE
+        # We write the short form of the command to history
+        echo "$1" >> $HISTFILE
     fi
-    echo "rm $file\n$BUFFER" > $file
 
-    # Execute the tempfile, then exit
-    BUFFER="zsh $file > /dev/null 2>&1 & disown; exit"
+    # We write the expanded form of the command to the tempfile, because the
+    # executet shell will not have our aliases or functions available
+    echo "rm $file\n$3" > $file
 
     # prevent writing meaningless "zsh $file > /dev/null ...." to history
     unset HISTFILE
-    zle .accept-line
+
+    # Execute the tempfile, then exit
+    zsh $file > /dev/null 2>&1 & disown
+
+    exit
 }
-zle -N accept-line
+
+# We use preexec_functions, so that the user can decide to overwrite our choice
+# or ammend it by own functions
+preexec_functions(shellex_preexec)
