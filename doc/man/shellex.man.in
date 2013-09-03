@@ -15,7 +15,7 @@ shellex - shell-based launcher
 
 All command-line parameters (together with some shellex-specific) are passed on
 to urxvt. This means, you can you e.g. '-bg grey20' for a lighter background.
-Using it for more than just customizing the appearence (for example adding own
+Using it for more than just customizing the appearance (for example adding own
 extensions) might stop shellex from working, so be careful.
 
 See urxvt(1) for a full list of options.
