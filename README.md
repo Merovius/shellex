@@ -61,7 +61,7 @@ Installation
 There are packages in
 
 * [debian](http://packages.debian.org/search?keywords=shellex&searchon=names&suite=all&section=all&sourceid=mozilla-search)
-* The [Arch User Repository](https://aur.archlinux.org/packages/shellex/)
+* Arch Linux: [Arch User Repository](https://aur.archlinux.org/packages/?SeB=n&K=shellex) ([latest Release](https://aur.archlinux.org/packages/shellex/) and [git-Repository](https://aur.archlinux.org/packages/shellex-git/))
 
 If you are on one of these distributions, we encourage you to install `shellex`
 via your package manager.
