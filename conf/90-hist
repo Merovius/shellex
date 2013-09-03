@@ -1,0 +1,8 @@
+# histfile enabling and forcing to read the history after setting it
+# © 2013 Paul Seyfert and contributors (see also: LICENSE)
+setopt sharehistory
+setopt appendhistory
+HISTSIZE=100
+HISTFILE=~/.shellex_history
+SAVEHIST=100
+fc -R

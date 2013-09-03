@@ -12,10 +12,20 @@ function accept-line () {
     # commands (see https://github.com/Merovius/shellex/issues/11). We let the
     # shell immediately remove the tempfile, so it's rather short-lived.
     file=`mktemp -t shellex_exec-XXXXXXXX`
+
+    # manually write history to histfile
+    # this is indeed more hack, the child zsh which executes $file should do this
+    if [ -n "$HISTFILE" ]
+    then
+       echo $BUFFER >> $HISTFILE
+    fi
     echo "rm $file\n$BUFFER" > $file
 
     # Execute the tempfile, then exit
     BUFFER="zsh $file > /dev/null 2>&1 & disown; exit"
+
+    # prevent writing meaningless "zsh $file > /dev/null ...." to history
+    unset HISTFILE
     zle .accept-line
 }
 zle -N accept-line
