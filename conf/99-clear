@@ -1,2 +1,4 @@
 # vim:ft=zsh
+# Clear the terminal-window at start
+# © 2013 Axel Wagner and contributors (see also: LICENSE)
 clear

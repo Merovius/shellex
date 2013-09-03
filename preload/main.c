@@ -1,3 +1,8 @@
+/*
+ * shellex - shell based launcher
+ *   This is a small LD_PRELOAD library to work around some issues
+ * © 2013 Axel Wagner and contributors (see also: LICENSE)
+ */
 #define _GNU_SOURCE
 #include <dlfcn.h>
 #include <stdlib.h>

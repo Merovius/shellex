@@ -1,6 +1,6 @@
 # vim:ft=zsh
-
 # Make zsh exit on escape
+# © 2013 Axel Wagner and contributors (see also: LICENSE)
 function _shellex_exit {
     exit
 }

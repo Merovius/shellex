@@ -1,4 +1,9 @@
 #!/bin/sh
+# shellex - shell based launcher
+#   This is a short shellscript to set some needed variables and defaults.
+#   See shellex(1) for information on invocation.
+# © 2013 Axel Wagner and contributors (see also: LICENSE)
+
 
 export LD_PRELOAD="@PREFIX@@LIBDIR@/shellex/shellex_preload.so"
 exec urxvt -perl-lib @PREFIX@@LIBDIR@/shellex/urxvt -pe shellex -override-redirect -name shellex -bg grey15 -fg linen $* -e env -u LD_PRELOAD zsh -f
