@@ -1,0 +1,6 @@
+setopt sharehistory
+setopt appendhistory
+HISTSIZE=100
+HISTFILE=~/.shellex_history
+SAVEHIST=100
+fc -R
