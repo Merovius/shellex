@@ -1,0 +1,4 @@
+# vim:ft=zsh
+# use gksudo instead of sudo
+# © 2013 Johannes Visintini and contributors (see also: LICENSE)
+alias sudo='gksudo'
