@@ -1,4 +1,5 @@
 # vim:ft=zsh
-# use gksudo instead of sudo
+# use gksudo (or kdesudo if gksudo not exists) instead of sudo
 # © 2013 Johannes Visintini and contributors (see also: LICENSE)
-alias sudo='gksudo'
+which kdesudo > /dev/null 2>&1 && alias sudo='kdesudo'
+which gksudo > /dev/null 2>&1 && alias sudo='gksudo'
