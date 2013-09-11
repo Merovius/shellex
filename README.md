@@ -104,18 +104,24 @@ following is a not comprehensive list of highly appreciated ways to contribute:
 Configuration
 =============
 
-Configuration of `shellex` has two parts: The first one are X-resources (which
-we will try to eliminate in the future):
+Configuration of `shellex` has two parts: The first one are X-resources.
+Additionally to the urxvt-class, instances run by shellex will also look for
+the shellex-class. This makes it possible to customize the appearance of
+shellex without interfering with your usual terminals.
 
-Resource           | Values         | Default | Description
- ----------------- | -------------- | ------- | ---
-URxvt.shellex.pos  | pointer｜focus | focus   | If pointer, shellex shows the window on the window, the mousepointer is on, else it uses the output, where most of the currently focused window is (falling back to the pointer-method, if the root-window is focused).
-URxvt.shellex.edge | bottom｜top    | top     | On what screenedge to show shellex
+There are also two additional resources defined by shellex:
 
-The other are small shell-script-snippets. When starting, `shellex` will look
-into `$HOME/.shellex` and into `/etc/shellex`. It will then source all the
-snippets in either location. If there is an identically named file in both
-directories, the one in your home will be preferred.
+
+Resource     | Values         | Default | Description
+ ----------- | -------------- | ------- | ---
+shellex.pos  | pointer｜focus | focus   | If pointer, shellex shows the window on the window, the mousepointer is on, else it uses the output, where most of the currently focused window is (falling back to the pointer-method, if the root-window is focused).
+shellex.edge | bottom｜top    | top     | On what screenedge to show shellex
+
+The other source of configuration are small shell-script-snippets. When
+starting, `shellex` will look into `$HOME/.shellex` and into `/etc/shellex`. It
+will then source all the snippets in either location. If there is an
+identically named file in both directories, the one in your home will be
+preferred.
 
 This makes for a pretty flexible configuration process: Usually there will be a
 lot of snippets in `/usr/lib/shellex/conf`, which should be self-contained and
@@ -128,13 +134,14 @@ just put them in `$HOME/.shellex` under a name not used yet and it will be
 automatically sourced.
 
 
-Changing Appearence
-===================
+Command-line
+============
 
 All command-line parameters given to `shellex` are passed directly to `urxvt`,
 so if you want to change colors or font, you can do it through the appropriate
-`urxvt`-parameters. For example, to get a dark grey background with a slightly
-yellow font you might start shellex with
+`urxvt`-parameters (or by using resources, for persistent configuration). For
+example, to get a dark grey background with a slightly yellow font you might
+start shellex with
 
 ```sh
 $ shellex -bg grey15 -fg linen

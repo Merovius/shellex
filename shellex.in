@@ -6,4 +6,4 @@
 
 
 export LD_PRELOAD="@PREFIX@@LIBDIR@/shellex/shellex_preload.so"
-exec urxvt -perl-lib @PREFIX@@LIBDIR@/shellex/urxvt -pe shellex -override-redirect -name shellex -bg grey15 -fg linen $* -e env -u LD_PRELOAD zsh -f
+exec urxvt -perl-lib @PREFIX@@LIBDIR@/shellex/urxvt -pe shellex -override-redirect -name shellex $* -e env -u LD_PRELOAD zsh -f

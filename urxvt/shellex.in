@@ -179,7 +179,13 @@ sub on_init {
 sub on_start {
     my ($self) = @_;
 
-    if ($self->x_resource("%.edge") eq 'bottom') {
+    # TODO: Remove compatibility code in future version
+    if (defined $self->x_resource("%.edge") || defined $self->x_resource("%.pos")) {
+        print "WARNING: URxvt.shellex.* resources are deprecated and will be removed in the future. Use shellex.*\n"
+    }
+
+
+    if ($self->x_resource("edge") eq 'bottom' || $self->x_resource("%.edge") eq 'bottom') {
         print "position should be at the bottom\n";
         $self->{bottom} = 1;
         $self->{y} = $self->{h};
@@ -187,7 +193,7 @@ sub on_start {
         print "position should be at the top\n";
     }
 
-    if ($self->x_resource("%.pos") eq 'pointer') {
+    if ($self->x_resource("pos") eq 'pointer' || $self->x_resource("%.pos") eq 'pointer') {
         print "Getting shellex-position from pointer\n";
         $self->geometry_from_ptr();
     } else {

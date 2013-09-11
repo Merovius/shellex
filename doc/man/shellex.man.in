@@ -33,15 +33,19 @@ configurable in shell.
 
 == RESOURCES
 
-*shellex* uses two X-Resources at the monent, to manipulate its behaviour:
+*shellex* uses two X-Resources at the moment, to manipulate its behaviour:
 
-URxvt.shellex.pos::
+shellex.pos::
 If pointer, shellex shows the window on the window, the mousepointer is on. If
 focus, it uses the output, where most of the currently focused window is.
 Defaults to focus.
 
-URxvt.shellex.edge::
+shellex.edge::
 On what screen edge to show the launcher (top or bottom). Defaults to top.
+
+Additionally all resources defined by urxvt (with class 'shellex' instead of
+'urxvt') can be used to customize the appearance or behaviour of the used
+terminal window.
 
 == CONFIGURATION
 
