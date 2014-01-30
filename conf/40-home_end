@@ -2,5 +2,6 @@
 # Make home and end buttons usable
 # © 2014 Axel Wagner and contributors (see also: LICENSE)
 
-bindkey '\e[7~' beginning-of-line
-bindkey '\e[8~' end-of-line
+bindkey '^[[7~' beginning-of-line
+bindkey '^[[8~' end-of-line
+bindkey '^[[3~' delete-char
