@@ -1,6 +1,6 @@
 INSTALL_TARGETS += install-conf
 
-default_confs := 10-autoexec 40-escape 40-setprompt 40-sigint 90-hist 99-clear
+default_confs := 10-autoexec 40-escape 40-end_home 40-setprompt 40-sigint 90-hist 99-clear
 
 install-conf:
 	$(INSTALL) -d -m 0755 $(DESTDIR)$(PREFIX)$(LIBDIR)/shellex/conf
