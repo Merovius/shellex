@@ -10,6 +10,9 @@ typical launcher-behaviour.
 This gives you a simple launcher with tab-completion and other shell-features,
 configurable in shell.
 
+See this video for a short demonstration and comparison to another app starter:
+![demo](http://virgilio.mib.infn.it/~seyfert/images/shellexdemo.gif)
+
 I tried to do this a few years back, then using C and implementing the
 terminal-operations myself. This turned out to be a very bad idea, it made the
 design overly complex and the state I left it in had regular segfaults and was far
