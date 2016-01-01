@@ -21,7 +21,7 @@ start again, this time using `urxvt` to do the terminal-part, which turned out t
 be really easy.
 
 So, this is the early prototype. It is usable and should already work and be
-usefull, but much is not working yet. I hope this time I will continue the work
+useful, but much is not working yet. I hope this time I will continue the work
 for longer ;)
 
 
@@ -50,10 +50,10 @@ Working:
 
 Planned, but not Implemented yet:
 * Buffering/showing some output, for errors etc. We have to think about some
-  magic way to determine, wether output is helpfull or the launcher should be
+  magic way to determine, wether output is helpful or the launcher should be
   hidden immediately
 * dmenu-like completion, typing part of a command still completing (maybe zsh
-  has sometething to do that?)
+  has something to do that?)
 * .desktop-file integration
 * Your ticket here
 
@@ -101,7 +101,7 @@ following is a not comprehensive list of highly appreciated ways to contribute:
 5. Contribute comments and documentation. Consider translating the manpage.
    Again, please announce your intention and again, if you translate to a
    language, that none of the core-developers speak (currently everything but
-   english and german) please consider it to be at least a mid-term commitment
+   English and German) please consider it to be at least a mid-term commitment
    to maintain the translation.
 
 
