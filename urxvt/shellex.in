@@ -203,7 +203,7 @@ sub on_start {
 
     # This environment variable is used by the LD_PRELOAD ioctl-override to
     # determine the values to send to the shell
-    $ENV{SHELLEX_MAX_HEIGHT} = int($self->{h} / $self->fheight);
+    $ENV{SHELLEX_MAX_ROWS} = int($self->{h} / $self->fheight);
 
     # Our initial position is different, if we have to be at the bottom
     if ($self->{bottom}) {
