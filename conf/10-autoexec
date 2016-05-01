@@ -28,7 +28,8 @@ function shellex_preexec () {
 
     # We write the expanded form of the command to the tempfile, because the
     # executet shell will not have our aliases or functions available
-    echo "rm $file\n$3" > $file
+    echo "rm $file" > $file
+    echo "$3" >> $file
 
     # prevent writing meaningless "zsh $file > /dev/null ...." to history
     unset HISTFILE

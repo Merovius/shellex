@@ -4,6 +4,6 @@
 #   See shellex(1) for information on invocation.
 # © 2013 Axel Wagner and contributors (see also: LICENSE)
 
-
-export LD_PRELOAD="@PREFIX@@LIBDIR@/shellex/shellex_preload.so"
-exec urxvt -perl-lib @PREFIX@@LIBDIR@/shellex/urxvt -pe shellex -override-redirect -name shellex $* -e env -u LD_PRELOAD zsh -f
+SHELLEX_PRELOAD="@PREFIX@@LIBDIR@/shellex/shellex_preload.so"
+export SHELLEX_SIZE_FILE=$(mktemp -t shellex-size-XXXXXXXX)
+exec urxvt -perl-lib @PREFIX@@LIBDIR@/shellex/urxvt -pe shellex -override-redirect -name shellex $* -e env LD_PRELOAD=$SHELLEX_PRELOAD  zsh -f

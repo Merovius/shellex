@@ -6,6 +6,8 @@
 #define _GNU_SOURCE
 #include <dlfcn.h>
 #include <stdlib.h>
+#include <stdio.h>
+#include <unistd.h>
 
 /* We can not take this from <sys/ioctl.h>, because it would define the
  * ioctl-function itself
@@ -22,28 +24,46 @@ int ioctl (int d, int request, char *argp) {
     if (orig_ioctl == NULL) {
         orig_ioctl = dlsym(RTLD_NEXT, "ioctl");
     }
-    static int max_rows = -1;
-    if (max_rows < 0 ) {
-        char *str = getenv("SHELLEX_MAX_ROWS");
-        if (str != NULL) {
-            max_rows = atoi(str);
-        }
-    }
 
-    // We only care for TIOCSWINSZ ioctls
-    if (request != 0x5414) {
+    /* We only care for TIOCGWINSZ ioctls */
+    if (request != 0x5413) {
         return orig_ioctl(d, request, argp);
     }
 
-    struct winsize ws = *((struct winsize *)argp);
-    int fheight = ws.ws_ypixel / ws.ws_row;
-    if (max_rows < 0) {
-        ws.ws_row = 80;
-        ws.ws_ypixel += 80 * fheight;
-    } else {
-        ws.ws_row = max_rows;
-        ws.ws_ypixel += max_rows * fheight;
+    static int max_rows = -1;
+
+    /* ioctl gets called once before the perl module had the time to determine
+     * the right size! Leave max_rows negative to indicat that it still needs to
+     * be read from the SHELLEX_SIZE_FILE */
+
+    if (max_rows < 0 ) {
+
+        char *fname = getenv("SHELLEX_SIZE_FILE");
+        if (fname != NULL && fname[0] != '\0') {
+            FILE *stream = fopen(fname,"r");
+            char str[5] = "-500";
+            if (stream != NULL) {
+                char *ret = fgets(str,5,stream);
+                fclose(stream);
+                if (ret != NULL) {
+                    /* this may be -500 */
+                    max_rows = atoi(str);
+                    if (max_rows > 0 ) {
+                        unlink(fname);
+                    }
+                }
+            }
+        }
     }
 
-    return orig_ioctl(d, request, (char *)&ws);
+
+    int retval = orig_ioctl(d, request, (char *)argp);
+    struct winsize *ws = (struct winsize *)argp;
+
+    /* max_rows is still negative at first invocation */
+    int fheight = ws->ws_ypixel / ws->ws_row;
+    ws->ws_row = (max_rows > 0) ? max_rows : 25;
+    ws->ws_ypixel = ws->ws_row * fheight;
+
+    return retval;
 }

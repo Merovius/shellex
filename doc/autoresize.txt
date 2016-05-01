@@ -12,15 +12,15 @@ shellex, because when is starting it's output, there is not enough space, for
 the tabcompletion, so even if we immediately resize the terminalwindow, it will
 be too late and the shell-output is screwed up.
 
-We rectify this, by injecting a custom ioctl-function into urxvt via
-LD_PRELOAD, which rewrites all TIOCSWINSZ-requests to have a constant size,
-thus faking to the shell that there is more space available, then there
-actually is. The actual number of rows is calculated on start of the urxvt and
-put into an environment-variable.
+We rectify this, by injecting a custom ioctl-function into zsh via LD_PRELOAD,
+which rewrites all TIOCGWINSZ-requests to have a constant size. This fakes to
+the shell that there is more space available, then there actually is.  The
+actual number of rows is calculated on start of the urxvt and put into a
+temporary file. The size is chosen a bit smaller than the screen, such that if
+zsh needs even more space for the tabcompletion than fits on the screen, the
+zsh handeling to deal with less space gets active. The filename is generated
+with mktemp before either zsh or urxvt start. The file gets unlinked by
+preload/main.c once a successful read happened.
 
-
-
-With the current state, the window of shellex is able to grow automatically
-exactly one time. This is, because zsh is spamming the output with '\n', if we
-grow it always and we have yet to figure out why and how to stop that.
-Shrinking (i.e. when the tab-completion vanishes again) is not implemented yet.
+Shrinking after tab completions mostly works fine: Depending on the
+tabcompletion settings, shrinking breaks once one hit the maximum size limit.
