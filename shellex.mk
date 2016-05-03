@@ -2,9 +2,6 @@ ALL_TARGETS += shellex
 INSTALL_TARGETS += install-shellex
 CLEAN_TARGETS += clean-shellex
 
-SHELLEX_CFLAGS=-fPIC
-SHELLEX_PRELOAD_LDFLAGS=-shared
-
 shellex: shellex.in
 	echo "[SED] $@"
 	$(SED) $(sed_replace_vars) $< > $@

@@ -2,8 +2,8 @@ ALL_TARGETS += preload/shellex_preload.so
 INSTALL_TARGETS += install-shellex_preload
 CLEAN_TARGETS += clean-shellex_preload
 
-SHELLEX_CFLAGS=-fPIC
-SHELLEX_PRELOAD_LDFLAGS=-shared
+SHELLEX_PRELOAD_LDFLAGS += -shared
+SHELLEX_PRELOAD_CFLAGS += -fPIC
 
 preload/shellex_preload.so: preload/main.c
 	echo "[CC] $@"
