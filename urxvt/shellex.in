@@ -205,12 +205,21 @@ sub on_start {
     # determine the values to send to the shell
     $ENV{SHELLEX_MAX_ROWS} = int($self->{h} / $self->fheight);
 
+    $self->{border} = $self->x_resource('internalBorder');
+
+    # the compiled-in default if the resource is not set
+    $self->{border} //= 2;
+
+    $self->{border} += $self->x_resource('externalBorder');
+
+    $self->{row_height} = $self->fheight + $self->x_resource('lineSpace');
+
+    my $height = $self->{row_height} + 2 * $self->{border};
+    my $y = $self->{y};
     # Our initial position is different, if we have to be at the bottom
-    if ($self->{bottom}) {
-        $self->XMoveResizeWindow($self->parent, $self->{x}, $self->{y} - (2 + $self->fheight), $self->{w}, 2+$self->fheight);
-    } else {
-        $self->XMoveResizeWindow($self->parent, $self->{x}, $self->{y}, $self->{w}, 2+$self->fheight);
-    }
+    $y -= $height if $self->{bottom};
+
+    $self->XMoveResizeWindow($self->parent, $self->{x}, $y, $self->{w}, $height);
 
     my $cfg = gen_conf();
 
