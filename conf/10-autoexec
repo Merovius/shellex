@@ -18,21 +18,10 @@ function shellex_preexec () {
     # shell immediately remove the tempfile, so it's rather short-lived.
     file=`mktemp -t shellex_exec-XXXXXXXX`
 
-    # manually write history to histfile
-    # this is indeed more hack, the child zsh which executes $file should do this
-    if [ -n "$HISTFILE" ]
-    then
-        # We write the short form of the command to history
-        echo "$1" >> $HISTFILE
-    fi
-
     # We write the expanded form of the command to the tempfile, because the
     # executet shell will not have our aliases or functions available
     echo "rm $file" > $file
     echo "$3" >> $file
-
-    # prevent writing meaningless "zsh $file > /dev/null ...." to history
-    unset HISTFILE
 
     # Execute the tempfile, then exit
     zsh $file > /dev/null 2>&1 & disown

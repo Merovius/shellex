@@ -1,8 +1,15 @@
-# histfile enabling and forcing to read the history after setting it
+# vim:ft=zsh
+# Avoid configuration sourcing in history
 # © 2013 Paul Seyfert and contributors (see also: LICENSE)
-setopt sharehistory
-setopt appendhistory
+
+# ensure history gets actually written (shell gets closed before history gets
+# written otherwise)
+setopt inc_append_history
+
 HISTSIZE=100
-HISTFILE=~/.shellex_history
 SAVEHIST=100
-fc -R
+
+# Push current history to stack (make e.g. sourcing of configuration
+# inaccessible to user). The stack won't be poped. Set HISTFILE to ~/.shellex
+# and read history from there.
+fc -p ~/.shellex_history
