@@ -1,0 +1,24 @@
+# vim:ft=zsh
+# Source all conf files
+# © 2016 Paul Seyfert and contributors (see also: LICENSE)
+
+# get array of all relevant files
+# http://stackoverflow.com/a/10981499
+# http://unix.stackexchange.com/a/26825
+thefiles=(@SYSCONFDIR@/shellex/* $HOME/.shellex/*(.N))
+
+# get the basenames of all files and make unique list
+# http://stackoverflow.com/a/9516801
+uniquified=( $( for f in "${thefiles[@]}" ; do basename $f ; done | sort -u ) )
+
+# source each file from $HOME/.shellex if it exists there, otherwise from /etc
+for f in $uniquified
+do
+# -r checks if file exists and is readable
+  if [[ -r $HOME/.shellex/$f ]]
+  then
+    source $HOME/.shellex/$f
+  else
+    source @SYSCONFDIR@/shellex/$f
+  fi
+done

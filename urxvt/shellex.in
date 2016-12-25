@@ -128,35 +128,6 @@ sub geometry_from_focus {
     }
 }
 
-sub slurp {
-    open my $fh, '<', shift;
-    local $/;
-    <$fh>;
-}
-
-sub gen_conf {
-    my ($cfg, $cfgname) = tempfile("/tmp/shellex-XXXXXXXX", UNLINK => 0);
-
-    print $cfg "rm $cfgname\n";
-
-    my %fileset;
-    map { $fileset{basename($_)} = 1 } <@SYSCONFDIR@/shellex/*>;
-    map { $fileset{basename($_)} = 1 } <$ENV{HOME}/.shellex/*>;
-
-    my @files = sort keys %fileset;
-
-    for my $f (@files) {
-        if (-e "$ENV{HOME}/.shellex/$f") {
-            print $cfg slurp("$ENV{HOME}/.shellex/$f");
-        } else {
-            print $cfg slurp("@SYSCONFDIR@/shellex/$f");
-        }
-    }
-    close($cfg);
-
-    return $cfgname;
-}
-
 # This hook is run when the extension is first initialized, before any windows
 # are created or mapped. There is not much work we can do here.
 sub on_init {
@@ -231,11 +202,10 @@ sub on_start {
 
     $self->XMoveResizeWindow($self->parent, $self->{x}, $y, $self->{w}, $height);
 
-    my $cfg = gen_conf();
-
     print "loading config\n";
     $self->tt_write($self->locale_encode("unset LD_PRELOAD\n"));
-    $self->tt_write($self->locale_encode(". $cfg\n"));
+    $self->tt_write($self->locale_encode(". @SYSCONFDIR@/shellexrc\n"));
+
     ();
 }
 
