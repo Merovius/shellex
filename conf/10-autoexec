@@ -7,12 +7,6 @@ function shellex_preexec () {
     # In $1 the command-line is given
     # In $3 the command-line with expanded aliases and function-bodies is given
 
-    # Don't do anything, if an empty command is given
-    if [ "$1" -regex-match '^\s*$' ]
-    then
-        return 0
-    fi
-
     # We need to write the command to a temporary file to accomodate multiple
     # commands (see https://github.com/Merovius/shellex/issues/11). We let the
     # shell immediately remove the tempfile, so it's rather short-lived.
@@ -32,3 +26,13 @@ function shellex_preexec () {
 # We use preexec_functions, so that the user can decide to overwrite our choice
 # or ammend it by own functions
 preexec_functions=(shellex_preexec)
+
+# preexec doesn't get executed on empty lines, so employ zle to exit on empty lines
+# https://www.reddit.com/r/zsh/comments/s6t6d/is_there_an_alias_for_an_empty_line/
+function empty-buffer-to-exit() {
+    if [[ $#BUFFER == 0 ]]; then
+        BUFFER="exit"
+    fi
+}
+# set special widget, see man zshzle
+zle -N zle-line-finish empty-buffer-to-exit
