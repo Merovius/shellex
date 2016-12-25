@@ -1,0 +1,4 @@
+# disable beeping of the shellex shell. e.g. when tab-completing
+# © 2016 Paul Seyfert and contributors (see also: LICENSE)
+setopt NO_BEEP
+
