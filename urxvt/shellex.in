@@ -32,9 +32,11 @@ sub geometry_from_ptr {
     my $ptr = { $self->{X}->QueryPointer($self->DefaultRootWindow) };
 
     for my $output (@outputs) {
-        if ($output->{x} <= $ptr->{root_x} && $ptr->{root_x} < $output->{x} + $output->{w}) {
+        if ($output->{x} <= $ptr->{root_x} && $ptr->{root_x} < $output->{x} + $output->{w})
+        {
             $self->{x} = $output->{x};
             if ($self->{bottom}) {
+
                 # The real y-coordinate will change during execution, when the window grows
                 $self->{y} = $output->{y} + $output->{h};
             } else {
@@ -54,6 +56,7 @@ sub max {
     }
     return $max;
 }
+
 sub min {
     my $min = shift;
     while (my $n = shift) {
@@ -85,7 +88,8 @@ sub geometry_from_focus {
     # The (x,y) coordinates we get are relative to the parent not the
     # root-window. So we just translate the coordinates of the upper-left
     # corner into the coordinate-system of the root-window
-    my (undef, undef, $fx, $fy) = $self->{X}->TranslateCoordinates($focus, $self->DefaultRootWindow, 0, 0);
+    my (undef, undef, $fx, $fy) =
+      $self->{X}->TranslateCoordinates($focus, $self->DefaultRootWindow, 0, 0);
 
     # Returns the area (in pixel²) of the intersection of two rectangles.
     # To understand how it works, best draw a picture.
@@ -117,6 +121,7 @@ sub geometry_from_focus {
             $max_area = $area;
             $self->{x} = $output->{x};
             if ($self->{bottom}) {
+
                 # The real y-coordinate will change during execution, when the window grows
                 $self->{y} = $output->{y} + $output->{h};
             } else {
@@ -152,14 +157,14 @@ sub on_start {
 
     # TODO: Remove compatibility code in future version
     if (defined $self->x_resource("%.edge") || defined $self->x_resource("%.pos")) {
-        print "WARNING: URxvt.shellex.* resources are deprecated and will be removed in the future. Use shellex.*\n"
+        print
+"WARNING: URxvt.shellex.* resources are deprecated and will be removed in the future. Use shellex.*\n";
     }
-
 
     if ($self->x_resource("edge") eq 'bottom' || $self->x_resource("%.edge") eq 'bottom') {
         print "position should be at the bottom\n";
         $self->{bottom} = 1;
-        $self->{y} = $self->{h};
+        $self->{y}      = $self->{h};
     } else {
         print "position should be at the top\n";
     }
@@ -172,11 +177,11 @@ sub on_start {
         $self->geometry_from_focus();
     }
 
-    # This environment variable is used by the LD_PRELOAD ioctl-override to
-    # determine the values to send to the shell
-    # TODO revisit communication protocol (from file to pipe?)
-    # TODO check if user defined their own SHELLEX_MAX_ROWS, which should be used like
-    #$ENV{SHELLEX_MAX_ROWS} = $sane_max_rows < $ENV{SHELLEX_MAX_ROWS} ? $sane_max_rows : $ENV{SHELLEX_MAX_ROWS} ;
+# This environment variable is used by the LD_PRELOAD ioctl-override to
+# determine the values to send to the shell
+# TODO revisit communication protocol (from file to pipe?)
+# TODO check if user defined their own SHELLEX_MAX_ROWS, which should be used like
+#$ENV{SHELLEX_MAX_ROWS} = $sane_max_rows < $ENV{SHELLEX_MAX_ROWS} ? $sane_max_rows : $ENV{SHELLEX_MAX_ROWS} ;
     my $sane_max_rows = int($self->{h} / $self->fheight) - 10;
 
     $ENV{SHELLEX_MAX_ROWS} = $sane_max_rows;
@@ -196,7 +201,8 @@ sub on_start {
     $self->{row_height} = $self->fheight + $self->x_resource('lineSpace');
 
     my $height = $self->{row_height} + 2 * $self->{border};
-    my $y = $self->{y};
+    my $y      = $self->{y};
+
     # Our initial position is different, if we have to be at the bottom
     $y -= $height if $self->{bottom};
 
@@ -219,7 +225,7 @@ sub on_line_update {
     # TODO: Does this work as intended, if there is an empty line in the
     # middle?
     my $nrow = 0;
-    for my $i ($self->top_row .. $self->nrow-1) {
+    for my $i ($self->top_row .. $self->nrow - 1) {
         if ($self->ROW_l($i) > 0) {
             $nrow++;
         }
@@ -232,7 +238,7 @@ sub on_line_update {
     # window up a little bit
     my $y = $self->{y};
     if ($self->{bottom}) {
-        $y -= 2+$nrow*$self->fheight;
+        $y -= 2 + $nrow * $self->fheight;
     }
     $self->cmd_parse("\e[8;$nrow;t\e[3;$self->{x};${y}t");
     ();
@@ -256,14 +262,15 @@ sub predict_term_size {
         $i += $line->end - $line->beg + 1;
         unless ($line->beg <= $row && $row <= $line->end) {
             $n += $line->end - $line->beg + 1;
-            next
+            next;
         }
 
         my $len = ($row - $line->beg) * $self->ncol + $col;
 
         # Because there might be control-sequences in $string, affecting the
         # number of lines, we need to manually walk it
-        for (my $j = 0; $j < length($string); $j++) {
+        for (my $j = 0 ; $j < length($string) ; $j++) {
+
             # Linebreaks mean the creating of a new line, finishing the old one
             if (substr($string, $j, 1) eq "\n") {
                 $len = ($len == 0 ? 1 : $len);
@@ -271,6 +278,7 @@ sub predict_term_size {
                 $len = 0;
                 next;
             }
+
             # Carriage-returns mean starting from the beginning. Though the new
             # len does not really have to be 0 (because the text is not
             # actually erased) it is a good enough estimate for now
@@ -278,6 +286,7 @@ sub predict_term_size {
                 $len = 0;
                 next;
             }
+
             # We just add one per other char. This actually might not work
             # correctly with wide-chars, but it is a good enough estimate for
             # now
@@ -306,7 +315,7 @@ sub on_add_lines {
     # window up a little bit
     my $y = $self->{y};
     if ($self->{bottom}) {
-        $y -= 2+$nrow*$self->fheight;
+        $y -= 2 + $nrow * $self->fheight;
     }
     $self->cmd_parse("\e[8;$nrow;t\e[3;$self->{x};${y}t");
     ();
@@ -348,6 +357,7 @@ sub on_map_notify {
     my ($self, $ev) = @_;
 
     $self->{X}->SetInputFocus($self->parent, 2, $self->{data}{event}{time});
+
     # We use GetInputFocus as a syncing-mechanism
     $self->{X}->GetInputFocus();
 

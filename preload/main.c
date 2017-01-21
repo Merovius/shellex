@@ -5,8 +5,8 @@
  */
 #define _GNU_SOURCE
 #include <dlfcn.h>
-#include <stdlib.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <unistd.h>
 
 /* We can not take this from <sys/ioctl.h>, because it would define the
@@ -19,7 +19,7 @@ struct winsize {
     unsigned short ws_ypixel;
 };
 
-int ioctl (int d, int request, char *argp) {
+int ioctl(int d, int request, char *argp) {
     static int (*orig_ioctl)(int, int, char *);
     if (orig_ioctl == NULL) {
         orig_ioctl = dlsym(RTLD_NEXT, "ioctl");
@@ -36,26 +36,25 @@ int ioctl (int d, int request, char *argp) {
      * the right size! Leave max_rows negative to indicat that it still needs to
      * be read from the SHELLEX_SIZE_FILE */
 
-    if (max_rows < 0 ) {
+    if (max_rows < 0) {
 
         char *fname = getenv("SHELLEX_SIZE_FILE");
         if (fname != NULL && fname[0] != '\0') {
-            FILE *stream = fopen(fname,"r");
+            FILE *stream = fopen(fname, "r");
             char str[5] = "-500";
             if (stream != NULL) {
-                char *ret = fgets(str,5,stream);
+                char *ret = fgets(str, 5, stream);
                 fclose(stream);
                 if (ret != NULL) {
                     /* this may be -500 */
                     max_rows = atoi(str);
-                    if (max_rows > 0 ) {
+                    if (max_rows > 0) {
                         unlink(fname);
                     }
                 }
             }
         }
     }
-
 
     int retval = orig_ioctl(d, request, (char *)argp);
     struct winsize *ws = (struct winsize *)argp;

@@ -2,5 +2,6 @@ preload/shellex_preload.so
 conf/shellexrc
 shellex
 urxvt/shellex
+urxvt/shellex.in.bak
 doc/man/shellex.1
 doc/man/shellex.man
