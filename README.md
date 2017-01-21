@@ -79,7 +79,7 @@ $ make
 $ make install
 ```
 
-for installing in `$(HOME).local`
+for installing in `$(HOME)/.local`
 
 ```sh
 $ git clone git://github.com/Merovius/shellex.git
