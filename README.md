@@ -20,10 +20,10 @@ from working. After not much seem to happen in that direction, I decided to
 start again, this time using `urxvt` to do the terminal-part, which turned out to
 be really easy.
 
-So, this is the early prototype. It is usable and should already work and be
-useful, but much is not working yet. I hope this time I will continue the work
-for longer ;)
-
+While this had the label “early prototype”, it has worked in daily use quite
+reasonably. A few possible improvements were never apparently important enough
+to invest serious amounts of time and work into them. Still, contributions are
+welcome.
 
 Architecture
 ============
@@ -48,13 +48,13 @@ Working:
 * Dynamic resizing of the launcher-window e.g. for multiple lines of
   suggestions for tab-completions (see [doc/autoresize.txt](doc/autoresize.txt))
 
-Planned, but not Implemented yet:
+Planned, but not implemented:
 * Buffering/showing some output, for errors etc. We have to think about some
-  magic way to determine, wether output is helpful or the launcher should be
+  magic way to determine, whether output is helpful or the launcher should be
   hidden immediately
 * dmenu-like completion, typing part of a command still completing (maybe zsh
-  has something to do that?)
-* .desktop-file integration
+  has something to do that? possibly [fzf](https://github.com/junegunn/fzf))
+* [.desktop-file integration](https://github.com/pseyfert/shellex-desktop)
 * Your ticket here
 
 
@@ -138,6 +138,19 @@ following is a not comprehensive list of highly appreciated ways to contribute:
    English and German) please consider it to be at least a mid-term commitment
    to maintain the translation.
 
+
+Customizations
+==============
+
+Users are invited to publish their customizations. Either as a contribution
+(see above) if these are changes that are a sensible default for all users, or
+in their own small packages which contain only the customizations. Especially,
+when the customization will be useful for many, but not all users.
+
+Existing customization projects are:
+
+* [pseyfert's customizations](https://github.com/pseyfert/shellex-customizations)
+* Your project here
 
 Configuration
 =============
