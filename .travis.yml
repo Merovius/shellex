@@ -1,0 +1,12 @@
+language: c
+script:
+  - make
+  - sudo make install
+  - make format_perl
+  - make format_c
+  - git diff --stat --exit-code
+
+before_install:
+ - sudo apt-get -qq build-dep shellex
+ - sudo apt-get -qq install clang-format-3.8
+ - sudo apt-get -qq install perltidy

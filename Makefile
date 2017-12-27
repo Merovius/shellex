@@ -13,6 +13,7 @@ include preload/preload.mk
 include shellex.mk
 include urxvt/urxvt_shellex.mk
 include conf.mk
+include format.mk
 include doc/man/man.mk
 
 real-all: $(ALL_TARGETS)
