@@ -2,7 +2,6 @@
 # Make zsh automatically execute a command, when enter is hit
 # © 2013 Axel Wagner and contributors (see also: LICENSE)
 
-zmodload zsh/regex
 function shellex_preexec () {
     # In $1 the command-line is given
     # In $3 the command-line with expanded aliases and function-bodies is given
