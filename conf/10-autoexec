@@ -21,7 +21,8 @@ preexec_functions=(shellex_preexec)
 # https://www.reddit.com/r/zsh/comments/s6t6d/is_there_an_alias_for_an_empty_line/
 function empty-buffer-to-exit() {
     if [[ $#BUFFER == 0 ]]; then
-        BUFFER="exit"
+        fc -P
+        exit
     fi
 }
 # set special widget, see man zshzle
