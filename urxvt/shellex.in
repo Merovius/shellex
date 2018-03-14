@@ -15,10 +15,11 @@ sub get_outputs {
     my @outputs = ();
     for my $line (qx(xrandr --listactivemonitors)) {
         next if $line =~ /Monitors: /;
-# output looks like:
-#Monitors: 2
-# 0: +*LVDS-1 1366/277x768/156+0+0  LVDS-1
-# 1: +HDMI-2 1920/518x1200/324+1366+0  HDMI-2
+
+        # output looks like:
+        #Monitors: 2
+        # 0: +*LVDS-1 1366/277x768/156+0+0  LVDS-1
+        # 1: +HDMI-2 1920/518x1200/324+1366+0  HDMI-2
         my ($w, $h, $x, $y) = ($line =~ /(\d+)\/\d+x(\d+)\/\d+\+(\d+)\+(\d+)/);
         print "found monitor with dimensions and position w=$w h=$h x=$x y=$y\n";
         push @outputs, { w => $w, h => $h, x => $x, y => $y };
