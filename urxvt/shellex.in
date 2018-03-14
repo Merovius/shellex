@@ -7,14 +7,20 @@ use X11::Protocol;
 use POSIX qw|ceil|;
 use strict;
 
-# The existing Randr-modules on CPAN seem to work only barely, so instead we
-# just parse the output of xrandr -q. This is an uglyness, that should go away
-# some time in the feature.
+# At the time of the original version of this function, the existing
+# Randr-modules on CPAN seem to work only barely, so instead we just parse the
+# output of xrandr --listactivemonitors. This is an uglyness, that should go
+# away some time in the future.
 sub get_outputs {
     my @outputs = ();
-    for my $line (qx(xrandr -q)) {
-        next unless $line =~ /\sconnected/;
-        my ($w, $h, $x, $y) = ($line =~ /(\d+)x(\d+)\+(\d+)\+(\d+)/);
+    for my $line (qx(xrandr --listactivemonitors)) {
+        next if $line =~ /Monitors: /;
+# output looks like:
+#Monitors: 2
+# 0: +*LVDS-1 1366/277x768/156+0+0  LVDS-1
+# 1: +HDMI-2 1920/518x1200/324+1366+0  HDMI-2
+        my ($w, $h, $x, $y) = ($line =~ /(\d+)\/\d+x(\d+)\/\d+\+(\d+)\+(\d+)/);
+        print "found monitor with dimensions and position w=$w h=$h x=$x y=$y\n";
         push @outputs, { w => $w, h => $h, x => $x, y => $y };
     }
     return @outputs;
@@ -75,6 +81,7 @@ sub geometry_from_focus {
 
     # If the root-window is focused, we fall back to using the pointer-position
     if ($focus == $self->DefaultRootWindow) {
+        print "Fall back to getting shellex-position from pointer\n";
         return $self->geometry_from_ptr();
     }
 
@@ -180,6 +187,9 @@ sub on_start {
 # TODO revisit communication protocol (from file to pipe?)
 # TODO check if user defined their own SHELLEX_MAX_ROWS, which should be used like
 #$ENV{SHELLEX_MAX_ROWS} = $sane_max_rows < $ENV{SHELLEX_MAX_ROWS} ? $sane_max_rows : $ENV{SHELLEX_MAX_ROWS} ;
+#
+# shellex should leave part of the screen uncovered (10 lines), this assumes
+# that a screen will always be larger than 10 lines.
     my $sane_max_rows = int($self->{h} / $self->fheight) - 10;
 
     $ENV{SHELLEX_MAX_ROWS} = $sane_max_rows;
@@ -187,7 +197,7 @@ sub on_start {
     open(my $fh, '>', $filename);
     print $fh "$ENV{SHELLEX_MAX_ROWS}\n";
     close $fh;
-    print "writing max rows file done\n";
+    print "wrote $sane_max_rows as max rows to $filename done\n";
 
     $self->{border} = $self->x_resource('internalBorder');
 
@@ -228,8 +238,8 @@ sub on_line_update {
             $nrow++;
         }
     }
-    $nrow = $nrow > 0 ? $nrow : 1;
     $nrow = $nrow > $ENV{SHELLEX_MAX_ROWS} ? $ENV{SHELLEX_MAX_ROWS} : $nrow;
+    $nrow = $nrow > 0 ? $nrow : 1;
     print "resizing to $nrow\n";
 
     # If the window is supposed to be at the bottom, we have to move the
@@ -292,6 +302,7 @@ sub predict_term_size {
         }
         $n += ceil(($len + 1.0) / $self->ncol);
     }
+    print "Predicting term size: $n\n";
     return $n;
 }
 
@@ -305,8 +316,8 @@ sub on_add_lines {
     print "add_lines(string = \"$str\")\n";
 
     my $nrow = $self->predict_term_size($string);
-    $nrow = $nrow > 0 ? $nrow : 1;
     $nrow = $nrow > $ENV{SHELLEX_MAX_ROWS} ? $ENV{SHELLEX_MAX_ROWS} : $nrow;
+    $nrow = $nrow > 0 ? $nrow : 1;
     print "resizing to $nrow\n";
 
     # If the window is supposed to be at the bottom, we have to move the
