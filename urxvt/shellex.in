@@ -4,8 +4,6 @@
 #   This is the urxvt extension part of shellex.
 # © 2013 Axel Wagner and contributors (see also: LICENSE)
 use X11::Protocol;
-use File::Temp qw|tempfile|;
-use File::Basename qw|basename|;
 use POSIX qw|ceil|;
 use strict;
 
