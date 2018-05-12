@@ -5,7 +5,11 @@
 # get array of all relevant files
 # http://stackoverflow.com/a/10981499
 # http://unix.stackexchange.com/a/26825
-thefiles=(@SYSCONFDIR@/shellex/* $HOME/.shellex/*(.N))
+# parentheses after * steer zsh's globbing
+#  . means "only regular files"
+#  -. means "regular files and symlinks pointing to regular files"
+#  N means "empty list in case of no matches"
+thefiles=(@SYSCONFDIR@/shellex/* $HOME/.shellex/*(-.N))
 
 # get the basenames of all files and make unique list
 # http://stackoverflow.com/a/9516801
