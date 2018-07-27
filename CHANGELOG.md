@@ -1,6 +1,14 @@
 Changelog
 =========
 
+0.3 - 2018-07-27
+----------------
+• Miscellaneous maintenance changes
+• Updated empty-line treatment
+• Changed xrandr parseing
+• Cleanup of unused perl modules
+• Bugfix: allow symlinks in user .shellex directories
+
 0.2 - 2016-12-27
 ----------------
 • Added optional sudo configuration
