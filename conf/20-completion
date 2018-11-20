@@ -1,0 +1,4 @@
+# enable tab completion system
+# © 2016 Paul Seyfert and contributors (see also: LICENSE)
+autoload -U compinit
+compinit -C

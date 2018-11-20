@@ -2,7 +2,7 @@ INSTALL_TARGETS += install-conf install-rc
 CLEAN_TARGETS += clean-shellexrc
 ALL_TARGETS += conf/shellexrc
 
-default_confs := 10-autoexec 20-nobeep 40-escape 40-home_end 40-setprompt 40-sigint 40-recent 90-hist 99-clear
+default_confs := 10-autoexec 20-completion 20-nobeep 40-escape 40-home_end 40-setprompt 40-sigint 40-recent 90-hist 99-clear
 
 install-conf:
 	echo "[INSTALL] $@"
