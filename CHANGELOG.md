@@ -1,13 +1,19 @@
 Changelog
 =========
 
-0.3 - 2018-07-27
+0.3 - 2018-11-23
 ----------------
 • Miscellaneous maintenance changes
 • Updated empty-line treatment
 • Changed xrandr parseing
 • Cleanup of unused perl modules
 • Bugfix: allow symlinks in user .shellex directories
+• Use configuration from `$XDG_CONFIG_HOME`
+• Enable compinit by default, add ctrl-x r for recent file completion
+
+The slight change in the default completion behaviour is very likely desirable.
+In the unlikely chance that a user does not appreciate the change, refer to the
+README about how to disable the snippet `20-completion`.
 
 0.2 - 2016-12-27
 ----------------
