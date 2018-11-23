@@ -9,17 +9,27 @@
 #  . means "only regular files"
 #  -. means "regular files and symlinks pointing to regular files"
 #  N means "empty list in case of no matches"
-thefiles=(@SYSCONFDIR@/shellex/* $HOME/.shellex/*(-.N))
+thefiles=(
+  @SYSCONFDIR@/shellex/*
+  ${XDG_CONFIG_HOME:-$HOME/.config}/shellex/*(-.N)
+  $HOME/.shellex/*(-.N)
+)
 
 # get the basenames of all files and make unique list
 # http://stackoverflow.com/a/9516801
 uniquified=( $( for f in "${thefiles[@]}" ; do basename $f ; done | sort -u ) )
 
-# source each file from $HOME/.shellex if it exists there, otherwise from /etc
+# source each file from the first of:
+# 1. $XDG_CONFIG_HOME/.shellex (typically $HOME/.config/shellex)
+# 2. $HOME/.shellex
+# 3. @SYSCONFDIR@/shellex
 for f in $uniquified
 do
-# -r checks if file exists and is readable
-  if [[ -r $HOME/.shellex/$f ]]
+  # -r checks if file exists and is readable
+  if [[ -r ${XDG_CONFIG_HOME:-$HOME/.config}/shellex/$f ]]
+  then
+    source $HOME/.config/shellex/$f
+  elif [[ -r $HOME/.shellex/$f ]]
   then
     source $HOME/.shellex/$f
   else

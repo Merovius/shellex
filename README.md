@@ -168,22 +168,27 @@ Resource     | Values         | Default | Description
 shellex.pos  | pointer｜focus | focus   | If pointer, shellex shows the window on the window, the mousepointer is on, else it uses the output, where most of the currently focused window is (falling back to the pointer-method, if the root-window is focused).
 shellex.edge | bottom｜top    | top     | On what screenedge to show shellex
 
-The other source of configuration are small shell-script-snippets. When
-starting, `shellex` will look into `$HOME/.shellex` and into `/etc/shellex`. It
-will then source all the snippets in either location. If there is an
-identically named file in both directories, the one in your home will be
-preferred.
+On start, `shellex` assembles a list of snippet basenames by looking at all of
+the paths listed below. For each snippet basename, `shellex` loads the first
+file it finds when looking through the paths in order:
 
-This makes for a pretty flexible configuration process: Usually there will be a
-lot of snippets in `/usr/lib/shellex/conf`, which should be self-contained and
-without a lot of side-effects. In `/etc/shellex` there then are some symlinks
-to those snippets, making up the default-configuration on this system, together
-with administrator-provided additional defaults. Whenever you don't want a
-snippet form `/etc/shellex` to be used, just create a symlink of the same name
-to `/dev/null` in `$HOME/.shellex`. If you want to create your own snippets,
-just put them in `$HOME/.shellex` under a name not used yet and it will be
-automatically sourced.
+1. `$XDG_CONFIG_HOME/.shellex`. Typically unset, defaulting to `$HOME/.config/shellex`.
+2. `$HOME/.shellex`
+3. `/etc/shellex` (shellex defaults, symlinks to `/usr/shellex/conf/`)
 
+To customize shellex, you can do the following things in
+`$XDG_CONFIG_HOME/.shellex` or `$HOME/.shellex/`:
+
+1. Overwrite a default by creating a new snippet of the same name
+2. Not include a default by creating a symlink to `/dev/null` of the same same
+3. Include an example-snippet not used by default, by creating a symlink to `/usr/shellex/snippet`
+4. Write you own snippets with a currently unused name
+
+To avoid naming-conflicts in the future, you should add a common suffix to all
+your own snippets. Snippets are run in ascending order. By choosing a number
+which sorts between/after the existing snippet(s) you can ensure it runs at the
+desired time. E.g. if your snippet beeps on errors, name it 15-errorbeep so that
+it sorts before 20-nobeep.
 
 Command-line
 ============

@@ -1,0 +1,15 @@
+# 'ctrl-x r' will complete the 12 last modified (mtime) files/directories
+# © 2018 Michael Stapelberg and contributors (see also: LICENSE)
+
+# only add this completion if compinit has been called
+if [[ -v _comps ]]
+then
+  # 'ctrl-x r' will complete the 12 last modified (mtime) files/directories
+  zle -C newest-files complete-word _generic
+  bindkey '^Xr' newest-files
+  zstyle ':completion:newest-files:*' completer _files
+  zstyle ':completion:newest-files:*' file-patterns '*~.*(omN[1,12])'
+  zstyle ':completion:newest-files:*' menu select yes
+  zstyle ':completion:newest-files:*' sort false
+  zstyle ':completion:newest-files:*' matcher-list 'b:=*' # important
+fi
