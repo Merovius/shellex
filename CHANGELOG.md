@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.3 - 2018-11-23
+0.3 - 2018-12-10
 ----------------
 • Miscellaneous maintenance changes
 • Updated empty-line treatment
